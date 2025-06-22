@@ -1,9 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from '@/context/AuthContext'
+import { AuthProvider, useAuth } from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
-import PrivateRoute from '@/components/auth/PrivateRoute'
 import Layout from '@/components/layout/Layout'
-import LoginPage from '@/pages/auth/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import PortfolioPage from '@/pages/PortfolioPage'
 import TradesPage from '@/pages/TradesPage'
@@ -16,34 +14,47 @@ import SettingsPage from '@/pages/SettingsPage'
 import InvestorPortalPage from '@/pages/InvestorPortalPage'
 
 function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-2xl font-semibold">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      {/* Routes with Layout */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Navigate to={user ? "/dashboard" : "/investor-portal"} />} />
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="portfolio" element={<PortfolioPage />} />
+        <Route path="trades" element={<TradesPage />} />
+        <Route path="research" element={<ResearchPage />} />
+        <Route path="investors" element={<InvestorsPage />} />
+        <Route path="reports" element={<ReportsPage />} />
+        <Route path="compliance" element={<CompliancePage />} />
+        <Route path="tasks" element={<TasksPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
+
+      {/* Standalone routes */}
+      <Route path="/investor-portal" element={<InvestorPortalPage />} />
+
+      {/* Redirect any other path */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
+}
+
+export default function AppWrapper() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Routes>
-          {/* Bypass login for development - go directly to dashboard */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="portfolio" element={<PortfolioPage />} />
-            <Route path="trades" element={<TradesPage />} />
-            <Route path="research" element={<ResearchPage />} />
-            <Route path="investors" element={<InvestorsPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="compliance" element={<CompliancePage />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="investor-portal" element={<InvestorPortalPage />} />
-          </Route>
-          
-          {/* Keep login route available but redirect to dashboard */}
-          <Route path="/login" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* Catch all */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+        <App />
       </AuthProvider>
     </ThemeProvider>
-  )
-}
-
-export default App 
+  );
+} 

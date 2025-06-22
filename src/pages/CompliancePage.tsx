@@ -6,7 +6,6 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
-  TrendingUp, 
   TrendingDown, 
   DollarSign, 
   Search,

@@ -87,12 +87,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   // Mock authentication functions
-  const mockSignIn = async (email: string, password: string) => {
-    if (email === 'admin@blackwater.com' && password === 'admin123') {
+  const mockSignIn = async (email: string) => {
+    if (email === 'admin@blackwater.com') {
       setUser(mockUser);
       setFirebaseUser(null);
     } else {
-      throw new Error('Invalid credentials. Use admin@blackwater.com / admin123');
+      throw new Error('Invalid credentials. Use admin@blackwater.com');
     }
   };
 
@@ -146,7 +146,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signIn = async (email: string, password: string) => {
     if (useMockAuth) {
-      return mockSignIn(email, password);
+      return mockSignIn(email);
     }
     
     try {
@@ -248,27 +248,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (useMockAuth) return;
     
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      
+      setLoading(true);
       if (firebaseUser) {
-        try {
-          const userData = await fetchUserData(firebaseUser);
-          setUser(userData);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          setUser(null);
-        }
+        const userData = await fetchUserData(firebaseUser);
+        setUser(userData);
+        setFirebaseUser(firebaseUser);
+        
+        // Update last login
+        await updateDoc(doc(db, 'users', firebaseUser.uid), {
+          lastLoginAt: new Date(),
+        });
+
       } else {
         setUser(null);
+        setFirebaseUser(null);
       }
-      
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, [useMockAuth]);
 
-  const value: AuthContextType = {
+  const value = {
     user,
     firebaseUser,
     loading,
@@ -281,9 +282,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     hasRole,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }; 
