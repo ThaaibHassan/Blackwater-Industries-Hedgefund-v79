@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/Blackwater-Industries-Hedgefund-v79/',
   plugins: [react()],
   resolve: {
     alias: {
