@@ -160,6 +160,49 @@ This project is proprietary software for Blackwater Industries.
 
 For support and questions, please contact the development team.
 
+## Manually Adding Users (Admin Instructions)
+
+### 1. Create the User in Firebase Authentication
+1. Go to the [Firebase Console Authentication Users page](https://console.firebase.google.com/project/blackwater-hedgefund/authentication/users).
+2. Click **"Add user"**.
+3. Enter the user's **email** and a **temporary password**.
+4. Click **"Add user"**.
+
+### 2. Create or Update the User Document in Firestore
+1. Go to the [Firestore Database page](https://console.firebase.google.com/project/blackwater-hedgefund/firestore/data).
+2. In the left sidebar, click on the `users` collection.
+3. Find the new user's UID (from the Auth users list) in the `users` collection.
+   - If it **exists**, click it and update the fields as needed.
+   - If it **does not exist**, click **"Add document"** and use the UID from Auth as the document ID.
+
+**Fill in the following fields:**
+- `uid`: (string) — The UID from Firebase Auth
+- `email`: (string) — The user's email
+- `displayName`: (string) — The user's name (optional)
+- `role`: (string) — `analyst`, `admin`, `manager`, `investor`, or `compliance`
+- `permissions`: (array) — Leave empty or fill with permissions (the app will auto-fill based on role)
+- `createdAt`: (timestamp) — Click the field type and select "timestamp", then set to "now"
+- `lastLoginAt`: (timestamp) — Same as above
+- `isActive`: (boolean) — `true`
+- `twoFactorEnabled`: (boolean) — `false`
+
+### 3. Send Credentials to the User
+- Give the user their email and temporary password.
+- When they log in, they'll be prompted to change their password.
+
+#### Example Firestore User Document
+| Field             | Type      | Example Value                |
+|-------------------|-----------|------------------------------|
+| uid               | string    | `abc123UID`                  |
+| email             | string    | `user@example.com`           |
+| displayName       | string    | `Jane Doe`                   |
+| role              | string    | `analyst`                    |
+| permissions       | array     | (leave empty, or auto-filled)|
+| createdAt         | timestamp | (set to now)                 |
+| lastLoginAt       | timestamp | (set to now)                 |
+| isActive          | boolean   | `true`                       |
+| twoFactorEnabled  | boolean   | `false`                      |
+
 ---
 
 **Blackwater Industries** - Institutional Hedge Fund Management Platform 
