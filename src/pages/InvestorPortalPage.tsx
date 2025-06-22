@@ -1,0 +1,549 @@
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  DollarSign, 
+  Search,
+  Filter,
+  Download,
+  Plus,
+  Eye,
+  Edit,
+  Trash2,
+  Calendar,
+  Clock,
+  Target,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  BarChart3,
+  Users,
+  User,
+  Mail,
+  Phone,
+  Building,
+  Globe,
+  FileText,
+  CreditCard,
+  Shield,
+  Activity
+} from 'lucide-react';
+
+// Mock investor data
+const investors = [
+  {
+    id: 1,
+    name: 'John Smith',
+    email: 'john.smith@email.com',
+    phone: '+1 (555) 123-4567',
+    type: 'individual',
+    status: 'active',
+    joinDate: '2023-01-15',
+    totalInvestment: 2500000,
+    currentValue: 2750000,
+    totalReturn: 10.0,
+    ytdReturn: 8.5,
+    riskProfile: 'moderate',
+    kycStatus: 'verified',
+    documents: ['w9_form.pdf', 'accredited_investor.pdf'],
+    lastActivity: '2024-01-15T10:30:00Z',
+    portfolio: {
+      fund1: { allocation: 60, value: 1650000, return: 12.5 },
+      fund2: { allocation: 25, value: 687500, return: 6.8 },
+      fund3: { allocation: 15, value: 412500, return: 4.2 }
+    }
+  },
+  {
+    id: 2,
+    name: 'Sarah Johnson',
+    email: 'sarah.johnson@company.com',
+    phone: '+1 (555) 234-5678',
+    type: 'institutional',
+    status: 'active',
+    joinDate: '2022-06-20',
+    totalInvestment: 5000000,
+    currentValue: 5450000,
+    totalReturn: 9.0,
+    ytdReturn: 7.2,
+    riskProfile: 'conservative',
+    kycStatus: 'verified',
+    documents: ['corporate_resolution.pdf', 'bank_letter.pdf'],
+    lastActivity: '2024-01-14T14:15:00Z',
+    portfolio: {
+      fund1: { allocation: 40, value: 2180000, return: 12.5 },
+      fund2: { allocation: 45, value: 2452500, return: 6.8 },
+      fund3: { allocation: 15, value: 817500, return: 4.2 }
+    }
+  },
+  {
+    id: 3,
+    name: 'Mike Chen',
+    email: 'mike.chen@startup.com',
+    phone: '+1 (555) 345-6789',
+    type: 'individual',
+    status: 'pending',
+    joinDate: '2024-01-10',
+    totalInvestment: 500000,
+    currentValue: 500000,
+    totalReturn: 0.0,
+    ytdReturn: 0.0,
+    riskProfile: 'aggressive',
+    kycStatus: 'pending',
+    documents: ['application.pdf'],
+    lastActivity: '2024-01-10T09:45:00Z',
+    portfolio: {
+      fund1: { allocation: 80, value: 400000, return: 0.0 },
+      fund2: { allocation: 20, value: 100000, return: 0.0 }
+    }
+  },
+  {
+    id: 4,
+    name: 'Lisa Wang',
+    email: 'lisa.wang@familyoffice.com',
+    phone: '+1 (555) 456-7890',
+    type: 'family_office',
+    status: 'active',
+    joinDate: '2021-12-05',
+    totalInvestment: 10000000,
+    currentValue: 11200000,
+    totalReturn: 12.0,
+    ytdReturn: 9.8,
+    riskProfile: 'moderate',
+    kycStatus: 'verified',
+    documents: ['family_office_cert.pdf', 'investment_agreement.pdf'],
+    lastActivity: '2024-01-13T11:20:00Z',
+    portfolio: {
+      fund1: { allocation: 50, value: 5600000, return: 12.5 },
+      fund2: { allocation: 30, value: 3360000, return: 6.8 },
+      fund3: { allocation: 20, value: 2240000, return: 4.2 }
+    }
+  },
+  {
+    id: 5,
+    name: 'David Kim',
+    email: 'david.kim@retirement.com',
+    phone: '+1 (555) 567-8901',
+    type: 'individual',
+    status: 'inactive',
+    joinDate: '2020-03-15',
+    totalInvestment: 1000000,
+    currentValue: 950000,
+    totalReturn: -5.0,
+    ytdReturn: -2.1,
+    riskProfile: 'conservative',
+    kycStatus: 'expired',
+    documents: ['retirement_account.pdf'],
+    lastActivity: '2023-11-20T16:00:00Z',
+    portfolio: {
+      fund1: { allocation: 30, value: 285000, return: -5.0 },
+      fund2: { allocation: 70, value: 665000, return: -5.0 }
+    }
+  }
+];
+
+const fundPerformance = [
+  { name: 'Blackwater Alpha Fund', nav: 125.50, dailyChange: 0.8, monthlyReturn: 3.2, ytdReturn: 12.5 },
+  { name: 'Blackwater Macro Fund', nav: 98.75, dailyChange: -0.3, monthlyReturn: 1.8, ytdReturn: 6.8 },
+  { name: 'Blackwater Credit Fund', nav: 104.20, dailyChange: 0.2, monthlyReturn: 1.2, ytdReturn: 4.2 }
+];
+
+const InvestorPortalPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [selectedRisk, setSelectedRisk] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+
+  const filteredInvestors = investors.filter(investor => {
+    const matchesSearch = investor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         investor.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = selectedStatus === 'all' || investor.status === selectedStatus;
+    const matchesType = selectedType === 'all' || investor.type === selectedType;
+    const matchesRisk = selectedRisk === 'all' || investor.riskProfile === selectedRisk;
+    
+    return matchesSearch && matchesStatus && matchesType && matchesRisk;
+  });
+
+  const sortedInvestors = [...filteredInvestors].sort((a, b) => {
+    switch (sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'investment':
+        return b.totalInvestment - a.totalInvestment;
+      case 'return':
+        return b.totalReturn - a.totalReturn;
+      case 'date':
+        return new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime();
+      default:
+        return 0;
+    }
+  });
+
+  const totalInvestors = investors.length;
+  const activeInvestors = investors.filter(i => i.status === 'active').length;
+  const totalAum = investors.reduce((sum, i) => sum + i.currentValue, 0);
+  const avgReturn = investors.reduce((sum, i) => sum + i.totalReturn, 0) / totalInvestors;
+
+  const formatCurrency = (amount: number) => {
+    if (amount >= 1e9) return `$${(amount / 1e9).toFixed(1)}B`;
+    if (amount >= 1e6) return `$${(amount / 1e6).toFixed(1)}M`;
+    if (amount >= 1e3) return `$${(amount / 1e3).toFixed(1)}K`;
+    return `$${amount.toFixed(0)}`;
+  };
+
+  const formatPercentage = (value: number) => {
+    const sign = value >= 0 ? '+' : '';
+    return `${sign}${value.toFixed(1)}%`;
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'inactive': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'individual': return <User className="w-4 h-4" />;
+      case 'institutional': return <Building className="w-4 h-4" />;
+      case 'family_office': return <Users className="w-4 h-4" />;
+      default: return <User className="w-4 h-4" />;
+    }
+  };
+
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case 'conservative': return 'bg-green-100 text-green-800';
+      case 'moderate': return 'bg-yellow-100 text-yellow-800';
+      case 'aggressive': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Investor Portal</h1>
+          <p className="text-muted-foreground">
+            Manage investor relationships, accounts, and communications
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button variant="outline">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Investor
+          </Button>
+        </div>
+      </div>
+
+      {/* Investor Summary */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Investors</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalInvestors}</div>
+            <p className="text-xs text-muted-foreground">
+              {activeInvestors} active
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total AUM</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(totalAum)}</div>
+            <p className="text-xs text-muted-foreground">
+              Under management
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Return</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatPercentage(avgReturn)}</div>
+            <p className="text-xs text-muted-foreground">
+              All time average
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">New This Month</CardTitle>
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">3</div>
+            <p className="text-xs text-muted-foreground">
+              New investors onboarded
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Investor Filters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-5">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="search"
+                  placeholder="Search investors..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <select
+                id="status"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="type">Type</Label>
+              <select
+                id="type"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="all">All Types</option>
+                <option value="individual">Individual</option>
+                <option value="institutional">Institutional</option>
+                <option value="family_office">Family Office</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="risk">Risk Profile</Label>
+              <select
+                id="risk"
+                value={selectedRisk}
+                onChange={(e) => setSelectedRisk(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="all">All Risk Levels</option>
+                <option value="conservative">Conservative</option>
+                <option value="moderate">Moderate</option>
+                <option value="aggressive">Aggressive</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="sort">Sort By</Label>
+              <select
+                id="sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="name">Name</option>
+                <option value="investment">Investment</option>
+                <option value="return">Return</option>
+                <option value="date">Join Date</option>
+              </select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Investors Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Investor Directory</CardTitle>
+          <CardDescription>
+            {filteredInvestors.length} of {investors.length} investors shown
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left p-2">Investor</th>
+                  <th className="text-left p-2">Type</th>
+                  <th className="text-left p-2">Status</th>
+                  <th className="text-right p-2">Investment</th>
+                  <th className="text-right p-2">Current Value</th>
+                  <th className="text-right p-2">Total Return</th>
+                  <th className="text-left p-2">Risk Profile</th>
+                  <th className="text-left p-2">KYC Status</th>
+                  <th className="text-left p-2">Join Date</th>
+                  <th className="text-center p-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedInvestors.map((investor) => (
+                  <tr key={investor.id} className="border-b hover:bg-muted/50">
+                    <td className="p-2">
+                      <div>
+                        <div className="font-medium">{investor.name}</div>
+                        <div className="text-sm text-muted-foreground">{investor.email}</div>
+                      </div>
+                    </td>
+                    <td className="p-2">
+                      <div className="flex items-center space-x-2">
+                        {getTypeIcon(investor.type)}
+                        <Badge variant="outline">
+                          {investor.type.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="p-2">
+                      <Badge className={getStatusColor(investor.status)}>
+                        {investor.status}
+                      </Badge>
+                    </td>
+                    <td className="p-2 text-right">{formatCurrency(investor.totalInvestment)}</td>
+                    <td className="p-2 text-right">{formatCurrency(investor.currentValue)}</td>
+                    <td className="p-2 text-right">
+                      <div className={`font-medium ${investor.totalReturn >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatPercentage(investor.totalReturn)}
+                      </div>
+                    </td>
+                    <td className="p-2">
+                      <Badge className={getRiskColor(investor.riskProfile)}>
+                        {investor.riskProfile}
+                      </Badge>
+                    </td>
+                    <td className="p-2">
+                      <Badge variant={investor.kycStatus === 'verified' ? 'default' : 'secondary'}>
+                        {investor.kycStatus}
+                      </Badge>
+                    </td>
+                    <td className="p-2">{formatDate(investor.joinDate)}</td>
+                    <td className="p-2">
+                      <div className="flex items-center justify-center space-x-1">
+                        <Button variant="ghost" size="sm">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Mail className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Fund Performance and Analytics */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Fund Performance</CardTitle>
+            <CardDescription>Current NAV and performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {fundPerformance.map((fund) => (
+                <div key={fund.name} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <div className="font-medium">{fund.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      NAV: ${fund.nav}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-medium ${fund.dailyChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatPercentage(fund.dailyChange)}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      YTD: {formatPercentage(fund.ytdReturn)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Investor Analytics</CardTitle>
+            <CardDescription>Key metrics and insights</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-sm">Avg Investment Size</span>
+                <span className="text-sm font-medium">{formatCurrency(totalAum / totalInvestors)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Investor Retention Rate</span>
+                <span className="text-sm font-medium text-green-600">94.2%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Avg Time to Onboard</span>
+                <span className="text-sm font-medium">5.3 days</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">KYC Completion Rate</span>
+                <span className="text-sm font-medium text-green-600">98.5%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Client Satisfaction</span>
+                <span className="text-sm font-medium text-green-600">4.8/5</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default InvestorPortalPage; 
