@@ -2,7 +2,7 @@
 
 An institutional-grade hedge fund management platform built with React, TypeScript, and Firebase.
 
-## 🚀 Features
+##  Features
 
 - **Role-Based Access Control (RBAC)**: Secure authentication with different user roles
 - **Multi-Module Architecture**: Dashboard, Portfolio, Trading, Research, Compliance, and Reporting
@@ -11,7 +11,7 @@ An institutional-grade hedge fund management platform built with React, TypeScri
 - **TypeScript**: Full type safety throughout the application
 - **Responsive Design**: Works seamlessly across all devices
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - **Frontend**: React 18 + TypeScript + Vite
 - **UI Framework**: ShadCN UI + TailwindCSS
@@ -20,7 +20,7 @@ An institutional-grade hedge fund management platform built with React, TypeScri
 - **Routing**: React Router v6
 - **Build Tool**: Vite
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 src/
@@ -36,7 +36,7 @@ src/
 └── utils/              # Utility functions
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -74,7 +74,7 @@ npm run dev
 
 The application will be available at `http://localhost:3001`
 
-## 🔧 Available Scripts
+##  Available Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
@@ -82,7 +82,7 @@ The application will be available at `http://localhost:3001`
 - `npm run lint` - Run ESLint
 - `npm run type-check` - Run TypeScript type checking
 
-## 🏗 Architecture
+##  Architecture
 
 ### Role-Based Access Control
 
@@ -104,7 +104,7 @@ The platform supports multiple user roles:
 7. **Compliance**: Regulatory compliance monitoring
 8. **Tasks**: Task management and workflows
 
-## 🔒 Security
+##  Security
 
 - Firebase Authentication with custom claims
 - Role-based route protection
@@ -112,14 +112,14 @@ The platform supports multiple user roles:
 - Environment variable protection
 - Input validation and sanitization
 
-## 🧪 Testing
+##  Testing
 
 - Unit tests with Jest and React Testing Library
 - Integration tests for critical workflows
 - E2E tests with Playwright
 - Security testing for authentication flows
 
-## 📦 Deployment
+##  Deployment
 
 ### Firebase Hosting
 
@@ -144,7 +144,7 @@ npm run build
 firebase deploy
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -152,11 +152,11 @@ firebase deploy
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is proprietary software for Blackwater Industries.
 
-## 🆘 Support
+##  Support
 
 For support and questions, please contact the development team.
 
