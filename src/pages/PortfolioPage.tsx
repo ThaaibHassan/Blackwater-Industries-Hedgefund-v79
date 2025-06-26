@@ -20,6 +20,13 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
 
 // Mock portfolio data
 const portfolioPositions = [
@@ -274,49 +281,49 @@ const PortfolioPage = () => {
             </div>
             <div>
               <Label htmlFor="sector">Sector</Label>
-              <select
-                id="sector"
-                value={selectedSector}
-                onChange={(e) => setSelectedSector(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Sectors</option>
-                <option value="Technology">Technology</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Financials">Financials</option>
-                <option value="Consumer Discretionary">Consumer Discretionary</option>
-                <option value="Industrials">Industrials</option>
-                <option value="Energy">Energy</option>
-                <option value="Materials">Materials</option>
-              </select>
+              <Select value={selectedSector} onValueChange={setSelectedSector}>
+                <SelectTrigger id="sector" className="w-full">
+                  <SelectValue placeholder="All Sectors" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sectors</SelectItem>
+                  <SelectItem value="Technology">Technology</SelectItem>
+                  <SelectItem value="Healthcare">Healthcare</SelectItem>
+                  <SelectItem value="Financials">Financials</SelectItem>
+                  <SelectItem value="Consumer Discretionary">Consumer Discretionary</SelectItem>
+                  <SelectItem value="Industrials">Industrials</SelectItem>
+                  <SelectItem value="Energy">Energy</SelectItem>
+                  <SelectItem value="Materials">Materials</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="risk">Risk Level</Label>
-              <select
-                id="risk"
-                value={selectedRisk}
-                onChange={(e) => setSelectedRisk(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Risk Levels</option>
-                <option value="low">Low Risk</option>
-                <option value="medium">Medium Risk</option>
-                <option value="high">High Risk</option>
-              </select>
+              <Select value={selectedRisk} onValueChange={setSelectedRisk}>
+                <SelectTrigger id="risk" className="w-full">
+                  <SelectValue placeholder="All Risk Levels" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Risk Levels</SelectItem>
+                  <SelectItem value="low">Low Risk</SelectItem>
+                  <SelectItem value="medium">Medium Risk</SelectItem>
+                  <SelectItem value="high">High Risk</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sort">Sort By</Label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="weight">Weight</option>
-                <option value="pnl">P&L</option>
-                <option value="pnlPercent">P&L %</option>
-                <option value="symbol">Symbol</option>
-              </select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger id="sort" className="w-full">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="weight">Weight</SelectItem>
+                  <SelectItem value="pnl">P&L</SelectItem>
+                  <SelectItem value="pnlPercent">P&L %</SelectItem>
+                  <SelectItem value="symbol">Symbol</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
