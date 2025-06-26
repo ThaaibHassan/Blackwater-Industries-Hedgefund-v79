@@ -1,0 +1,53 @@
+[
+  {
+    "id": "user_001",
+    "fields": {
+      "uid": "user_001",
+      "email": "alice.admin@blackwater.com",
+      "displayName": "Alice Admin",
+      "photoURL": "https://randomuser.me/api/portraits/women/1.jpg",
+      "role": "admin",
+      "permissions": [
+        "portfolio:view", "portfolio:edit", "trades:view", "trades:edit", "users:view", "users:edit", "reports:view", "reports:generate"
+      ],
+      "createdAt": "2023-01-10T09:00:00.000Z",
+      "lastLoginAt": "2024-06-01T12:00:00.000Z",
+      "isActive": true,
+      "twoFactorEnabled": true
+    }
+  },
+  {
+    "id": "user_002",
+    "fields": {
+      "uid": "user_002",
+      "email": "bob.manager@blackwater.com",
+      "displayName": "Bob Manager",
+      "photoURL": "https://randomuser.me/api/portraits/men/2.jpg",
+      "role": "manager",
+      "permissions": [
+        "portfolio:view", "portfolio:edit", "trades:view", "trades:edit", "investors:view", "investors:edit"
+      ],
+      "createdAt": "2023-03-15T10:30:00.000Z",
+      "lastLoginAt": "2024-06-02T08:30:00.000Z",
+      "isActive": true,
+      "twoFactorEnabled": false
+    }
+  },
+  {
+    "id": "user_003",
+    "fields": {
+      "uid": "user_003",
+      "email": "carol.analyst@blackwater.com",
+      "displayName": "Carol Analyst",
+      "photoURL": "https://randomuser.me/api/portraits/women/3.jpg",
+      "role": "analyst",
+      "permissions": [
+        "portfolio:view", "trades:view", "research:view", "research:edit"
+      ],
+      "createdAt": "2023-05-20T14:45:00.000Z",
+      "lastLoginAt": "2024-06-03T11:15:00.000Z",
+      "isActive": true,
+      "twoFactorEnabled": false
+    }
+  }
+] 

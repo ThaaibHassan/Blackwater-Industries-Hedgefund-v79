@@ -1,0 +1,42 @@
+[
+  {
+    "id": "research_001",
+    "fields": {
+      "title": "Q2 Tech Sector Outlook",
+      "content": "Analysis of major tech stocks for Q2 2024, focusing on growth drivers and risks.",
+      "analystId": "user_003",
+      "analystName": "Carol Analyst",
+      "assetClass": "equity",
+      "symbols": ["AAPL", "MSFT", "GOOGL"],
+      "tags": ["tech", "outlook", "2024"],
+      "status": "published",
+      "priority": "high",
+      "dueDate": "2024-04-01T00:00:00.000Z",
+      "createdAt": "2024-03-15T10:00:00.000Z",
+      "updatedAt": "2024-04-01T09:00:00.000Z",
+      "attachments": [],
+      "version": 1,
+      "isPublic": true
+    }
+  },
+  {
+    "id": "research_002",
+    "fields": {
+      "title": "Global Macro Trends",
+      "content": "Summary of macroeconomic trends impacting multi-asset portfolios in 2024.",
+      "analystId": "user_003",
+      "analystName": "Carol Analyst",
+      "assetClass": "global_macro",
+      "symbols": ["EURUSD", "SPX"],
+      "tags": ["macro", "2024"],
+      "status": "approved",
+      "priority": "medium",
+      "dueDate": "2024-05-01T00:00:00.000Z",
+      "createdAt": "2024-04-10T11:00:00.000Z",
+      "updatedAt": "2024-05-01T08:00:00.000Z",
+      "attachments": [],
+      "version": 1,
+      "isPublic": false
+    }
+  }
+] 

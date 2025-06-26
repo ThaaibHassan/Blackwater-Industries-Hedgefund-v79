@@ -1,0 +1,83 @@
+[
+  {
+    "id": "trade_001",
+    "fields": {
+      "portfolioId": "portfolio_001",
+      "symbol": "AAPL",
+      "assetClass": "equity",
+      "side": "buy",
+      "quantity": 1000,
+      "price": 180.5,
+      "totalValue": 180500,
+      "commission": 150,
+      "timestamp": "2024-05-20T14:00:00.000Z",
+      "status": "executed",
+      "tags": ["tech", "large-cap"],
+      "riskMetrics": {
+        "positionSize": 0.05,
+        "stopLoss": 170,
+        "takeProfit": 200,
+        "riskRewardRatio": 1.5,
+        "maxRisk": 10500
+      },
+      "notes": "Earnings momentum trade.",
+      "screenshots": [],
+      "pnl": 20000,
+      "rMultiple": 1.9
+    }
+  },
+  {
+    "id": "trade_002",
+    "fields": {
+      "portfolioId": "portfolio_002",
+      "symbol": "EURUSD",
+      "assetClass": "currencies",
+      "side": "buy",
+      "quantity": 500000,
+      "price": 1.085,
+      "totalValue": 542500,
+      "commission": 300,
+      "timestamp": "2024-05-22T09:30:00.000Z",
+      "status": "executed",
+      "tags": ["forex", "macro"],
+      "riskMetrics": {
+        "positionSize": 0.1,
+        "stopLoss": 1.07,
+        "takeProfit": 1.11,
+        "riskRewardRatio": 2.0,
+        "maxRisk": 7500
+      },
+      "notes": "Macro trend following.",
+      "screenshots": [],
+      "pnl": 12000,
+      "rMultiple": 1.6
+    }
+  },
+  {
+    "id": "trade_003",
+    "fields": {
+      "portfolioId": "portfolio_001",
+      "symbol": "TSLA",
+      "assetClass": "equity",
+      "side": "short",
+      "quantity": 500,
+      "price": 170.2,
+      "totalValue": 85100,
+      "commission": 100,
+      "timestamp": "2024-05-25T10:00:00.000Z",
+      "status": "executed",
+      "tags": ["auto", "short"],
+      "riskMetrics": {
+        "positionSize": 0.03,
+        "stopLoss": 180,
+        "takeProfit": 150,
+        "riskRewardRatio": 1.3,
+        "maxRisk": 4900
+      },
+      "notes": "Short-term reversal.",
+      "screenshots": [],
+      "pnl": -2000,
+      "rMultiple": -0.4
+    }
+  }
+] 

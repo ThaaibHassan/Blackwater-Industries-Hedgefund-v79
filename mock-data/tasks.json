@@ -1,0 +1,40 @@
+[
+  {
+    "id": "task_001",
+    "fields": {
+      "title": "Review Q1 Portfolio Report",
+      "type": "report_preparation",
+      "status": "pending",
+      "priority": "high",
+      "assigneeId": "user_003",
+      "assigneeName": "Carol Analyst",
+      "dueDate": "2024-04-15T17:00:00.000Z",
+      "checklist": [
+        {"id": "item_001", "description": "Check data accuracy", "isCompleted": false},
+        {"id": "item_002", "description": "Review charts", "isCompleted": false}
+      ],
+      "tags": ["report", "review"],
+      "createdAt": "2024-04-10T10:00:00.000Z",
+      "updatedAt": "2024-04-10T10:00:00.000Z"
+    }
+  },
+  {
+    "id": "task_002",
+    "fields": {
+      "title": "Investor KYC Follow-up",
+      "type": "compliance_check",
+      "status": "in_progress",
+      "priority": "medium",
+      "assigneeId": "user_002",
+      "assigneeName": "Bob Manager",
+      "dueDate": "2024-06-10T12:00:00.000Z",
+      "checklist": [
+        {"id": "item_003", "description": "Contact investor", "isCompleted": true, "completedAt": "2024-06-01T09:00:00.000Z"},
+        {"id": "item_004", "description": "Verify documents", "isCompleted": false}
+      ],
+      "tags": ["kyc", "investor"],
+      "createdAt": "2024-06-01T08:00:00.000Z",
+      "updatedAt": "2024-06-01T08:00:00.000Z"
+    }
+  }
+] 

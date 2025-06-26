@@ -1,0 +1,50 @@
+[
+  {
+    "id": "report_001",
+    "fields": {
+      "name": "Q1 2024 Portfolio Statement",
+      "type": "quarterly_report",
+      "portfolioId": "portfolio_001",
+      "template": {
+        "id": "template_001",
+        "name": "Quarterly Statement",
+        "type": "quarterly_report",
+        "sections": [],
+        "styling": {
+          "theme": "corporate",
+          "primaryColor": "#1a237e",
+          "secondaryColor": "#fbc02d",
+          "fontFamily": "Roboto"
+        }
+      },
+      "data": {},
+      "status": "completed",
+      "generatedAt": "2024-04-10T12:00:00.000Z",
+      "recipients": ["alice.admin@blackwater.com", "bob.manager@blackwater.com"]
+    }
+  },
+  {
+    "id": "report_002",
+    "fields": {
+      "name": "2023 Annual Investor Report",
+      "type": "annual_report",
+      "investorId": "investor_001",
+      "template": {
+        "id": "template_002",
+        "name": "Annual Investor Report",
+        "type": "annual_report",
+        "sections": [],
+        "styling": {
+          "theme": "light",
+          "primaryColor": "#1976d2",
+          "secondaryColor": "#ffb300",
+          "fontFamily": "Arial"
+        }
+      },
+      "data": {},
+      "status": "completed",
+      "generatedAt": "2024-01-15T10:00:00.000Z",
+      "recipients": ["contact@acmecapital.com"]
+    }
+  }
+] 

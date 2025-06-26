@@ -3,27 +3,29 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: '/Blackwater-Industries-Hedgefund-v79/',
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@/components": path.resolve(__dirname, "./src/components"),
-      "@/lib": path.resolve(__dirname, "./src/lib"),
-      "@/hooks": path.resolve(__dirname, "./src/hooks"),
-      "@/context": path.resolve(__dirname, "./src/context"),
-      "@/modules": path.resolve(__dirname, "./src/modules"),
-      "@/types": path.resolve(__dirname, "./src/types"),
-      "@/utils": path.resolve(__dirname, "./src/utils"),
+export default defineConfig(({ mode }) => {
+  return {
+    base: mode === 'production' ? '/Blackwater-Industries-Hedgefund-v79/' : '/',
+    plugins: [react()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        "@/components": path.resolve(__dirname, "./src/components"),
+        "@/lib": path.resolve(__dirname, "./src/lib"),
+        "@/hooks": path.resolve(__dirname, "./src/hooks"),
+        "@/context": path.resolve(__dirname, "./src/context"),
+        "@/modules": path.resolve(__dirname, "./src/modules"),
+        "@/types": path.resolve(__dirname, "./src/types"),
+        "@/utils": path.resolve(__dirname, "./src/utils"),
+      },
     },
-  },
-  server: {
-    port: 3000,
-    host: true,
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-  },
+    server: {
+      port: 3000,
+      host: true,
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: true,
+    },
+  }
 }) 

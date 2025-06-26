@@ -26,6 +26,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
   const { user } = useAuth();
   const { theme } = useTheme();
 
+  console.log('Sidebar user:', user);
+
   // Simple test - just show basic navigation
   const menuItems = [
     { title: 'Dashboard', href: '/dashboard', icon: Home },
@@ -38,6 +40,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
     { title: 'Tasks', href: '/tasks', icon: Calendar },
     { title: 'Settings', href: '/settings', icon: Settings },
   ];
+  
+  const adminMenuItems = [
+    { title: 'User Management', href: '/users', icon: Users, role: 'admin' }
+  ];
+
+  const getMenuItems = () => {
+    if (user?.role === 'admin') {
+      return [...menuItems, ...adminMenuItems];
+    }
+    return menuItems;
+  };
 
   return (
     <>
@@ -84,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, setIsSidebarOpen }) =>
         
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {menuItems.map((item) => {
+          {getMenuItems().map((item) => {
             const Icon = item.icon;
             return (
               <NavLink

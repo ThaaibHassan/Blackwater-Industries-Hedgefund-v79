@@ -16,6 +16,7 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
+import PerformanceChart from '@/components/charts/PerformanceChart';
 
 // Mock data with realistic hedge fund metrics
 const portfolioData = {
@@ -69,7 +70,26 @@ const DashboardPage = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState('1Y');
+  const [filteredPerformanceData, setFilteredPerformanceData] = useState(performanceData);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const getFilteredData = () => {
+      switch (selectedTimeframe) {
+        case '1M':
+          return performanceData.slice(-1);
+        case '3M':
+          return performanceData.slice(-3);
+        case '6M':
+          return performanceData.slice(-6);
+        case '1Y':
+        case 'ALL':
+        default:
+          return performanceData;
+      }
+    };
+    setFilteredPerformanceData(getFilteredData());
+  }, [selectedTimeframe]);
 
   const handleRefresh = () => {
     setIsLoading(true);
@@ -201,23 +221,7 @@ const DashboardPage = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center bg-muted rounded-lg">
-              <div className="text-center">
-                <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Performance chart</p>
-                <p className="text-sm text-muted-foreground">Using Recharts or Chart.js</p>
-                <div className="mt-4 space-y-2">
-                  {performanceData.slice(-6).map((data, index) => (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span>{data.month}</span>
-                      <span className={data.return >= 0 ? 'text-green-600' : 'text-red-600'}>
-                        {formatPercentage(data.return)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <PerformanceChart data={filteredPerformanceData} />
           </CardContent>
         </Card>
 

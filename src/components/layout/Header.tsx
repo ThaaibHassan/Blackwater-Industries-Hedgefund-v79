@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ setIsSidebarOpen }) => {
               </span>
             </div>
             <span className="text-sm font-medium">
-              {user?.displayName || 'User'}
+              {user?.email || 'User'}
             </span>
           </div>
           

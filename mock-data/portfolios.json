@@ -1,0 +1,88 @@
+[
+  {
+    "id": "portfolio_001",
+    "fields": {
+      "name": "Blackwater Alpha Fund",
+      "description": "Long/Short Equity strategy focused on US markets.",
+      "managerId": "user_002",
+      "managerName": "Bob Manager",
+      "inceptionDate": "2022-01-01T00:00:00.000Z",
+      "strategy": "long_short_equity",
+      "riskProfile": "moderate",
+      "targetReturn": 0.12,
+      "maxDrawdown": 0.08,
+      "isActive": true,
+      "createdAt": "2022-01-01T00:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z",
+      "nav": 10500000,
+      "totalValue": 12000000,
+      "cashBalance": 2000000,
+      "leverage": 1.2,
+      "fees": {
+        "managementFee": 0.02,
+        "performanceFee": 0.2,
+        "hurdleRate": 0.05,
+        "highWaterMark": true,
+        "lockupPeriod": 365,
+        "redemptionNotice": 30
+      },
+      "performance": {
+        "totalReturn": 0.15,
+        "annualizedReturn": 0.13,
+        "sharpeRatio": 1.4,
+        "maxDrawdown": 0.08,
+        "volatility": 0.11,
+        "beta": 0.9,
+        "alpha": 0.03,
+        "informationRatio": 1.1,
+        "calmarRatio": 1.9,
+        "sortinoRatio": 2.0,
+        "treynorRatio": 0.7,
+        "trackingError": 0.04
+      }
+    }
+  },
+  {
+    "id": "portfolio_002",
+    "fields": {
+      "name": "Blackwater Macro Fund",
+      "description": "Global Macro strategy with multi-asset exposure.",
+      "managerId": "user_002",
+      "managerName": "Bob Manager",
+      "inceptionDate": "2021-06-15T00:00:00.000Z",
+      "strategy": "global_macro",
+      "riskProfile": "aggressive",
+      "targetReturn": 0.18,
+      "maxDrawdown": 0.12,
+      "isActive": true,
+      "createdAt": "2021-06-15T00:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z",
+      "nav": 8000000,
+      "totalValue": 9500000,
+      "cashBalance": 1500000,
+      "leverage": 1.5,
+      "fees": {
+        "managementFee": 0.025,
+        "performanceFee": 0.25,
+        "hurdleRate": 0.06,
+        "highWaterMark": true,
+        "lockupPeriod": 730,
+        "redemptionNotice": 60
+      },
+      "performance": {
+        "totalReturn": 0.22,
+        "annualizedReturn": 0.17,
+        "sharpeRatio": 1.7,
+        "maxDrawdown": 0.12,
+        "volatility": 0.15,
+        "beta": 1.1,
+        "alpha": 0.05,
+        "informationRatio": 1.3,
+        "calmarRatio": 1.8,
+        "sortinoRatio": 2.2,
+        "treynorRatio": 0.8,
+        "trackingError": 0.05
+      }
+    }
+  }
+] 
