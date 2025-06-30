@@ -32,6 +32,13 @@ import {
   Unlock,
   AlertCircle
 } from 'lucide-react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
 
 // Mock compliance data
 const complianceTasks = [
@@ -357,47 +364,47 @@ const CompliancePage = () => {
             </div>
             <div>
               <Label htmlFor="type">Type</Label>
-              <select
-                id="type"
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Types</option>
-                <option value="regulatory">Regulatory</option>
-                <option value="risk">Risk</option>
-                <option value="security">Security</option>
-                <option value="aml">AML</option>
-                <option value="training">Training</option>
-              </select>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger id="type" className="w-full">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="regulatory">Regulatory</SelectItem>
+                  <SelectItem value="risk">Risk</SelectItem>
+                  <SelectItem value="security">Security</SelectItem>
+                  <SelectItem value="aml">AML</SelectItem>
+                  <SelectItem value="training">Training</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="priority">Priority</Label>
-              <select
-                id="priority"
-                value={selectedPriority}
-                onChange={(e) => setSelectedPriority(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Priorities</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
+              <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                <SelectTrigger id="priority" className="w-full">
+                  <SelectValue placeholder="All Priorities" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sort">Sort By</Label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="dueDate">Due Date</option>
-                <option value="priority">Priority</option>
-                <option value="status">Status</option>
-                <option value="title">Title</option>
-              </select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger id="sort" className="w-full">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="dueDate">Due Date</SelectItem>
+                  <SelectItem value="priority">Priority</SelectItem>
+                  <SelectItem value="status">Status</SelectItem>
+                  <SelectItem value="title">Title</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>

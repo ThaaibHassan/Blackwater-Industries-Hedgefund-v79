@@ -11,6 +11,7 @@ import TasksPage from './pages/TasksPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/auth/LoginPage';
 import { AuthProvider } from './context/AuthContext';
+import { DataProvider } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
 import PrivateRoute from './components/auth/PrivateRoute';
 import AdminRoute from './components/auth/AdminRoute';
@@ -21,34 +22,36 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/investor-portal" element={<InvestorPortalPage />} />
+        <DataProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/investor-portal" element={<InvestorPortalPage />} />
 
-          {/* Protected Routes */}
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Layout />
-              </PrivateRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="portfolio" element={<PortfolioPage />} />
-            <Route path="trades" element={<TradesPage />} />
-            <Route path="research" element={<ResearchPage />} />
-            <Route path="investors" element={<InvestorsPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="compliance" element={<CompliancePage />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route element={<AdminRoute />}> 
-              <Route path="users" element={<UsersPage />} />
+            {/* Protected Routes */}
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="portfolio" element={<PortfolioPage />} />
+              <Route path="trades" element={<TradesPage />} />
+              <Route path="research" element={<ResearchPage />} />
+              <Route path="investors" element={<InvestorsPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="compliance" element={<CompliancePage />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route element={<AdminRoute />}> 
+                <Route path="users" element={<UsersPage />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </DataProvider>
       </AuthProvider>
     </ThemeProvider>
   );

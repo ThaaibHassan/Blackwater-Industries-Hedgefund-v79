@@ -1,7 +1,24 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, 
   Search, 
@@ -16,79 +33,119 @@ import {
   User,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Edit,
+  Trash2,
+  Eye,
+  X,
+  Save
 } from 'lucide-react';
 
 const InvestorsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedInvestor, setSelectedInvestor] = useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddingInvestor, setIsAddingInvestor] = useState(false);
+  const [editingInvestorId, setEditingInvestorId] = useState<number | null>(null);
+  const [newInvestor, setNewInvestor] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    type: 'individual',
+    totalCommitment: 0,
+    assignedManager: ''
+  });
+  const { toast } = useToast();
 
   // Mock investor data
   const investors = [
     {
-      id: '1',
+      id: 1,
       name: 'John Smith',
       email: 'john.smith@email.com',
       phone: '+1 (555) 123-4567',
       type: 'individual',
       status: 'active',
-      totalCommitment: 5000000,
-      currentBalance: 4850000,
-      inceptionDate: '2023-01-15',
+      totalCommitment: 2500000,
+      currentBalance: 2750000,
       kycStatus: 'approved',
       assignedManager: 'Sarah Johnson',
-      lastContact: '2024-01-20'
+      lastContact: '2024-01-15'
     },
     {
-      id: '2',
-      name: 'Acme Capital Partners',
-      email: 'investments@acmecapital.com',
-      phone: '+1 (555) 987-6543',
+      id: 2,
+      name: 'Acme Corporation',
+      email: 'investor@acme.com',
+      phone: '+1 (555) 234-5678',
       type: 'institutional',
       status: 'active',
-      totalCommitment: 25000000,
-      currentBalance: 24250000,
-      inceptionDate: '2022-06-10',
+      totalCommitment: 5000000,
+      currentBalance: 5450000,
       kycStatus: 'approved',
       assignedManager: 'Mike Chen',
-      lastContact: '2024-01-25'
+      lastContact: '2024-01-14'
     },
     {
-      id: '3',
-      name: 'Family Office XYZ',
-      email: 'ci@familyofficexyz.com',
-      phone: '+1 (555) 456-7890',
+      id: 3,
+      name: 'Family Office LLC',
+      email: 'contact@familyoffice.com',
+      phone: '+1 (555) 345-6789',
       type: 'family_office',
-      status: 'prospect',
-      totalCommitment: 0,
+      status: 'active',
+      totalCommitment: 10000000,
+      currentBalance: 11200000,
+      kycStatus: 'approved',
+      assignedManager: 'Lisa Wang',
+      lastContact: '2024-01-13'
+    },
+    {
+      id: 4,
+      name: 'Retirement Fund',
+      email: 'admin@retirementfund.com',
+      phone: '+1 (555) 456-7890',
+      type: 'institutional',
+      status: 'pending',
+      totalCommitment: 3000000,
       currentBalance: 0,
-      inceptionDate: null,
       kycStatus: 'pending',
-      assignedManager: 'John Smith',
-      lastContact: '2024-01-28'
+      assignedManager: 'David Kim',
+      lastContact: '2024-01-12'
     }
   ];
 
   const pipeline = [
     {
-      id: '1',
-      investorName: 'Tech Ventures Fund',
-      stage: 'due_diligence',
-      targetCommitment: 15000000,
+      id: 1,
+      investorName: 'Tech Startup Fund',
+      assignedManager: 'John Smith',
+      targetCommitment: 2000000,
       probability: 75,
-      expectedCloseDate: '2024-03-15',
-      assignedManager: 'Sarah Johnson',
-      lastActivity: '2024-01-29'
+      expectedCloseDate: '2024-02-15',
+      stage: 'due_diligence',
+      lastActivity: '2024-01-15'
     },
     {
-      id: '2',
-      investorName: 'Pension Fund ABC',
-      stage: 'presentation',
-      targetCommitment: 50000000,
+      id: 2,
+      investorName: 'University Endowment',
+      assignedManager: 'Sarah Johnson',
+      targetCommitment: 5000000,
       probability: 60,
-      expectedCloseDate: '2024-04-30',
+      expectedCloseDate: '2024-03-01',
+      stage: 'negotiation',
+      lastActivity: '2024-01-14'
+    },
+    {
+      id: 3,
+      investorName: 'Private Equity Firm',
       assignedManager: 'Mike Chen',
-      lastActivity: '2024-01-27'
+      targetCommitment: 8000000,
+      probability: 40,
+      expectedCloseDate: '2024-04-01',
+      stage: 'initial_contact',
+      lastActivity: '2024-01-13'
     }
   ];
 
@@ -123,20 +180,257 @@ const InvestorsPage = () => {
     }
   };
 
+  const handleViewInvestor = (investor: any) => {
+    setSelectedInvestor(selectedInvestor?.id === investor.id ? null : investor);
+  };
+
+  const handleSendEmail = (investor: any) => {
+    const subject = encodeURIComponent('Investment Update - Blackwater Industries');
+    const body = encodeURIComponent(`Dear ${investor.name},\n\nThank you for your investment with Blackwater Industries.\n\nCurrent Balance: $${investor.currentBalance.toLocaleString()}\nTotal Commitment: $${investor.totalCommitment.toLocaleString()}\n\nBest regards,\nBlackwater Industries Team`);
+    window.open(`mailto:${investor.email}?subject=${subject}&body=${body}`);
+    toast({
+      title: "Email Client Opened",
+      description: `Email client opened for ${investor.name}`,
+    });
+  };
+
+  const handleCallInvestor = (investor: any) => {
+    window.open(`tel:${investor.phone}`);
+    toast({
+      title: "Call Initiated",
+      description: `Calling ${investor.name} at ${investor.phone}`,
+    });
+  };
+
+  const handleDeleteInvestor = (investor: any) => {
+    if (confirm(`Are you sure you want to delete ${investor.name}? This action cannot be undone.`)) {
+      toast({
+        title: "Investor Deleted",
+        description: `${investor.name} has been removed from the system.`,
+      });
+    }
+  };
+
+  const handleScheduleMeeting = (deal: any) => {
+    const eventTitle = encodeURIComponent(`Meeting - ${deal.investorName}`);
+    const eventDetails = encodeURIComponent(`Investment discussion with ${deal.investorName}\nTarget Commitment: $${deal.targetCommitment.toLocaleString()}\nStage: ${deal.stage.replace('_', ' ')}`);
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() + 1);
+    const endDate = new Date(startDate);
+    endDate.setHours(endDate.getHours() + 1);
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDetails}&dates=${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
+    
+    window.open(googleCalendarUrl, '_blank');
+    toast({
+      title: "Calendar Event Created",
+      description: `Meeting scheduled with ${deal.investorName}`,
+    });
+  };
+
+  const handleAddInvestor = () => {
+    setIsAddingInvestor(true);
+    setEditingInvestorId(null);
+    setNewInvestor({
+      name: '',
+      email: '',
+      phone: '',
+      type: 'individual',
+      totalCommitment: 0,
+      assignedManager: ''
+    });
+  };
+
+  const handleSaveInvestor = () => {
+    if (newInvestor.name && newInvestor.email && newInvestor.phone) {
+      // In a real app, this would call an API
+      toast({
+        title: "Investor Added",
+        description: `${newInvestor.name} has been added to the system.`,
+      });
+      setIsAddingInvestor(false);
+      setNewInvestor({
+        name: '',
+        email: '',
+        phone: '',
+        type: 'individual',
+        totalCommitment: 0,
+        assignedManager: ''
+      });
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEditInvestor = (investor: any) => {
+    setNewInvestor({
+      name: investor.name,
+      email: investor.email,
+      phone: investor.phone,
+      type: investor.type,
+      totalCommitment: investor.totalCommitment,
+      assignedManager: investor.assignedManager
+    });
+    setEditingInvestorId(investor.id);
+    setIsAddingInvestor(true);
+  };
+
+  const handleUpdateInvestor = () => {
+    if (newInvestor.name && newInvestor.email && newInvestor.phone) {
+      // In a real app, this would call an API
+      toast({
+        title: "Investor Updated",
+        description: `${newInvestor.name} has been updated.`,
+      });
+      setIsAddingInvestor(false);
+      setEditingInvestorId(null);
+      setNewInvestor({
+        name: '',
+        email: '',
+        phone: '',
+        type: 'individual',
+        totalCommitment: 0,
+        assignedManager: ''
+      });
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCancelForm = () => {
+    setIsAddingInvestor(false);
+    setEditingInvestorId(null);
+    setNewInvestor({
+      name: '',
+      email: '',
+      phone: '',
+      type: 'individual',
+      totalCommitment: 0,
+      assignedManager: ''
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Investor Management</h1>
           <p className="text-muted-foreground">
-            Manage investor relationships and fundraising pipeline
+            Manage investor relationships and pipeline
           </p>
         </div>
-        <Button>
+        <Button onClick={handleAddInvestor} disabled={isAddingInvestor}>
           <Plus className="mr-2 h-4 w-4" />
           Add Investor
         </Button>
       </div>
+
+      {/* INLINE INVESTOR FORM */}
+      {isAddingInvestor && (
+        <Card className="border-2 border-blue-200 bg-blue-50/50">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              {editingInvestorId ? 'Edit Investor' : 'Add New Investor'}
+              <Button variant="ghost" size="sm" onClick={handleCancelForm}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name">Investor Name *</Label>
+                  <Input
+                    id="name"
+                    value={newInvestor.name}
+                    onChange={(e) => setNewInvestor({ ...newInvestor, name: e.target.value })}
+                    placeholder="Enter investor name"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={newInvestor.email}
+                    onChange={(e) => setNewInvestor({ ...newInvestor, email: e.target.value })}
+                    placeholder="Enter email address"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="phone">Phone *</Label>
+                  <Input
+                    id="phone"
+                    value={newInvestor.phone}
+                    onChange={(e) => setNewInvestor({ ...newInvestor, phone: e.target.value })}
+                    placeholder="Enter phone number"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="type">Investor Type</Label>
+                  <Select value={newInvestor.type} onValueChange={(value) => setNewInvestor({ ...newInvestor, type: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="individual">Individual</SelectItem>
+                      <SelectItem value="institutional">Institutional</SelectItem>
+                      <SelectItem value="family_office">Family Office</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="commitment">Total Commitment</Label>
+                  <Input
+                    id="commitment"
+                    type="number"
+                    value={newInvestor.totalCommitment}
+                    onChange={(e) => setNewInvestor({ ...newInvestor, totalCommitment: parseFloat(e.target.value) || 0 })}
+                    placeholder="Enter amount"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="manager">Assigned Manager</Label>
+                <Input
+                  id="manager"
+                  value={newInvestor.assignedManager}
+                  onChange={(e) => setNewInvestor({ ...newInvestor, assignedManager: e.target.value })}
+                  placeholder="Enter assigned manager"
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="flex space-x-2 pt-2">
+                <Button onClick={editingInvestorId ? handleUpdateInvestor : handleSaveInvestor} className="flex-1">
+                  <Save className="mr-2 h-4 w-4" />
+                  {editingInvestorId ? 'Update Investor' : 'Add Investor'}
+                </Button>
+                <Button variant="outline" onClick={handleCancelForm} className="flex-1">
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Investor Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -211,17 +505,18 @@ const InvestorsPage = () => {
                   className="pl-8 w-64"
                 />
               </div>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">All Types</option>
-                <option value="individual">Individual</option>
-                <option value="institutional">Institutional</option>
-                <option value="family_office">Family Office</option>
-                <option value="fund_of_funds">Fund of Funds</option>
-              </select>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="px-3 py-2 border rounded-md text-sm w-48">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="individual">Individual</SelectItem>
+                  <SelectItem value="institutional">Institutional</SelectItem>
+                  <SelectItem value="family_office">Family Office</SelectItem>
+                  <SelectItem value="fund_of_funds">Fund of Funds</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardHeader>
@@ -264,14 +559,38 @@ const InvestorsPage = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleSendEmail(investor)}
+                      title="Send Email"
+                    >
                       <Mail className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleCallInvestor(investor)}
+                      title="Call Investor"
+                    >
                       <Phone className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <User className="h-4 w-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleViewInvestor(investor)}
+                      title="View Details"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleDeleteInvestor(investor)}
+                      title="Delete Investor"
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -330,7 +649,12 @@ const InvestorsPage = () => {
                     <span className={`px-2 py-1 rounded text-xs ${getStageColor(deal.stage)}`}>
                       {deal.stage.replace('_', ' ')}
                     </span>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleScheduleMeeting(deal)}
+                      title="Schedule Meeting"
+                    >
                       <Calendar className="h-4 w-4" />
                     </Button>
                   </div>
@@ -373,6 +697,91 @@ const InvestorsPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* View Investor Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Investor Details</DialogTitle>
+            <DialogDescription>
+              Detailed information about {selectedInvestor?.name}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedInvestor && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Name</Label>
+                  <p className="font-medium">{selectedInvestor.name}</p>
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <p className="font-medium">{selectedInvestor.email}</p>
+                </div>
+                <div>
+                  <Label>Type</Label>
+                  <p className="font-medium">{selectedInvestor.type.replace('_', ' ')}</p>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <p className="font-medium">{selectedInvestor.status}</p>
+                </div>
+                <div>
+                  <Label>Total Commitment</Label>
+                  <p className="font-medium">${(selectedInvestor.totalCommitment / 1000000).toFixed(1)}M</p>
+                </div>
+                <div>
+                  <Label>Current Balance</Label>
+                  <p className="font-medium">${(selectedInvestor.currentBalance / 1000000).toFixed(1)}M</p>
+                </div>
+                <div>
+                  <Label>KYC Status</Label>
+                  <p className="font-medium">{selectedInvestor.kycStatus}</p>
+                </div>
+                <div>
+                  <Label>Assigned Manager</Label>
+                  <p className="font-medium">{selectedInvestor.assignedManager}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Investor Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Investor</DialogTitle>
+            <DialogDescription>
+              Edit investor details and commitments
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Add investor editing form here */}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Investor Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Investor</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedInvestor?.name}? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteInvestor}>
+              Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

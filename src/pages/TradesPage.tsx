@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -21,8 +22,18 @@ import {
   AlertTriangle,
   CheckCircle,
   XCircle,
-  BarChart3
+  BarChart3,
+  X,
+  Save,
+  Activity
 } from 'lucide-react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
 
 // Mock trading data
 const trades = [
@@ -137,6 +148,67 @@ const TradesPage = () => {
   const [selectedStrategy, setSelectedStrategy] = useState('all');
   const [selectedSide, setSelectedSide] = useState('all');
   const [sortBy, setSortBy] = useState('timestamp');
+  const { toast } = useToast();
+
+  const [isAddingTrade, setIsAddingTrade] = useState(false);
+  const [editingTradeId, setEditingTradeId] = useState<number | null>(null);
+  const [newTrade, setNewTrade] = useState({
+    symbol: '',
+    side: 'buy' as const,
+    quantity: 0,
+    price: 0,
+    type: 'market' as const,
+    strategy: 'momentum'
+  });
+
+  // Mock data - FIXED: Define trades array first
+  const initialTrades = [
+    {
+      id: 1,
+      symbol: 'AAPL',
+      side: 'buy',
+      quantity: 100,
+      price: 175.50,
+      totalValue: 17550,
+      pnl: 1000,
+      status: 'executed',
+      type: 'market',
+      strategy: 'momentum',
+      analyst: 'John Smith',
+      timestamp: '2024-01-15T10:30:00Z'
+    },
+    {
+      id: 2,
+      symbol: 'TSLA',
+      side: 'sell',
+      quantity: 50,
+      price: 245.75,
+      totalValue: 12287.5,
+      pnl: -500,
+      status: 'executed',
+      type: 'limit',
+      strategy: 'mean-reversion',
+      analyst: 'Sarah Johnson',
+      timestamp: '2024-01-14T14:20:00Z'
+    },
+    {
+      id: 3,
+      symbol: 'NVDA',
+      side: 'buy',
+      quantity: 200,
+      price: 850.00,
+      totalValue: 170000,
+      pnl: 2000,
+      status: 'pending',
+      type: 'limit',
+      strategy: 'growth',
+      analyst: 'Mike Chen',
+      timestamp: '2024-01-13T09:15:00Z'
+    }
+  ];
+
+  // FIXED: Use initialTrades instead of trades
+  const [trades, setTrades] = useState(initialTrades);
 
   const filteredTrades = trades.filter(trade => {
     const matchesSearch = trade.symbol.toLowerCase().includes(searchTerm.toLowerCase());
@@ -190,10 +262,10 @@ const TradesPage = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'executed': return <CheckCircle className="w-4 h-4" />;
-      case 'pending': return <Clock className="w-4 h-4" />;
-      case 'cancelled': return <XCircle className="w-4 h-4" />;
-      default: return <AlertTriangle className="w-4 h-4" />;
+      case 'executed': return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'pending': return <Clock className="h-4 w-4 text-yellow-600" />;
+      case 'cancelled': return <AlertTriangle className="h-4 w-4 text-red-600" />;
+      default: return <Clock className="h-4 w-4 text-gray-600" />;
     }
   };
 
@@ -206,24 +278,170 @@ const TradesPage = () => {
     });
   };
 
+  const handleViewTrade = (trade: any) => {
+    toast({
+      title: "Trade Details",
+      description: `Viewing details for ${trade.symbol} trade`,
+    });
+  };
+
+  const handleEditTrade = (trade: any) => {
+    setNewTrade({
+      symbol: trade.symbol,
+      side: trade.side,
+      quantity: trade.quantity,
+      price: trade.price,
+      type: trade.type,
+      strategy: trade.strategy
+    });
+    setEditingTradeId(trade.id);
+    setIsAddingTrade(true);
+  };
+
+  const handleDeleteTrade = (trade: any) => {
+    if (confirm(`Are you sure you want to delete this ${trade.symbol} trade?`)) {
+      setTrades(trades.filter(t => t.id !== trade.id));
+      toast({
+        title: "Trade Deleted",
+        description: `${trade.symbol} trade has been removed.`,
+      });
+    }
+  };
+
+  const handleExportTrades = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Date,Symbol,Side,Quantity,Price,Value,Status,Type\n"
+      + trades.map(t => 
+          `${t.timestamp},${t.symbol},${t.side},${t.quantity},${t.price},${t.totalValue},${t.status},${t.type}`
+        ).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `trades_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Trades Exported",
+      description: "Trade data has been exported to CSV file.",
+    });
+  };
+
+  const handleAddTrade = () => {
+    console.log('handleAddTrade called'); // Debug log
+    setIsAddingTrade(true);
+    setEditingTradeId(null);
+    setNewTrade({
+      symbol: '',
+      side: 'buy',
+      quantity: 0,
+      price: 0,
+      type: 'market',
+      strategy: 'momentum'
+    });
+  };
+
+  const handleSaveTrade = () => {
+    if (newTrade.symbol && newTrade.quantity > 0 && newTrade.price > 0) {
+      const trade = {
+        id: Date.now(),
+        ...newTrade,
+        totalValue: newTrade.quantity * newTrade.price,
+        pnl: 0,
+        status: 'pending',
+        analyst: 'Current User',
+        timestamp: new Date().toISOString()
+      };
+      setTrades([...trades, trade]);
+      setIsAddingTrade(false);
+      setNewTrade({
+        symbol: '',
+        side: 'buy',
+        quantity: 0,
+        price: 0,
+        type: 'market',
+        strategy: 'momentum'
+      });
+      toast({
+        title: "Trade Added",
+        description: `${newTrade.side.toUpperCase()} ${newTrade.quantity} shares of ${newTrade.symbol} at $${newTrade.price}`,
+      });
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleUpdateTrade = () => {
+    if (editingTradeId && newTrade.symbol && newTrade.quantity > 0 && newTrade.price > 0) {
+      setTrades(trades.map(trade => 
+        trade.id === editingTradeId 
+          ? { 
+              ...trade, 
+              ...newTrade, 
+              totalValue: newTrade.quantity * newTrade.price 
+            }
+          : trade
+      ));
+      setIsAddingTrade(false);
+      setEditingTradeId(null);
+      setNewTrade({
+        symbol: '',
+        side: 'buy',
+        quantity: 0,
+        price: 0,
+        type: 'market',
+        strategy: 'momentum'
+      });
+      toast({
+        title: "Trade Updated",
+        description: `${newTrade.symbol} trade has been updated.`,
+      });
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCancelForm = () => {
+    setIsAddingTrade(false);
+    setEditingTradeId(null);
+    setNewTrade({
+      symbol: '',
+      side: 'buy',
+      quantity: 0,
+      price: 0,
+      type: 'market',
+      strategy: 'momentum'
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Trading Journal</h1>
+          <h1 className="text-3xl font-bold">Trading Operations</h1>
           <p className="text-muted-foreground">
-            Track trades, analyze performance, and manage strategies
+            Monitor and execute trading activities
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleExportTrades}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button>
+          <Button onClick={handleAddTrade} disabled={isAddingTrade}>
             <Plus className="w-4 h-4 mr-2" />
-            New Trade
+            Add Trade
           </Button>
         </div>
       </div>
@@ -233,12 +451,38 @@ const TradesPage = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Trades</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalTrades}</div>
             <p className="text-xs text-muted-foreground">
-              {executedTrades} executed
+              Trading activity
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Executed</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{executedTrades}</div>
+            <p className="text-xs text-muted-foreground">
+              Completed trades
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(trades.reduce((sum, t) => sum + t.totalValue, 0))}</div>
+            <p className="text-xs text-muted-foreground">
+              Trade volume
             </p>
           </CardContent>
         </Card>
@@ -246,48 +490,20 @@ const TradesPage = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total P&L</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {formatCurrency(totalPnl)}
             </div>
             <p className="text-xs text-muted-foreground">
-              All time
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{winRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              {trades.filter(t => t.status === 'executed' && t.pnl > 0).length} of {executedTrades} trades
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Trade</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatCurrency(totalPnl / executedTrades)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Per executed trade
+              Profit & Loss
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters and Search */}
+      {/* Filters */}
       <Card>
         <CardHeader>
           <CardTitle>Trade Filters</CardTitle>
@@ -309,60 +525,60 @@ const TradesPage = () => {
             </div>
             <div>
               <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Status</option>
-                <option value="executed">Executed</option>
-                <option value="pending">Pending</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger id="status" className="w-full">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="executed">Executed</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="strategy">Strategy</Label>
-              <select
-                id="strategy"
-                value={selectedStrategy}
-                onChange={(e) => setSelectedStrategy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Strategies</option>
-                <option value="momentum">Momentum</option>
-                <option value="mean-reversion">Mean Reversion</option>
-                <option value="growth">Growth</option>
-                <option value="value">Value</option>
-                <option value="technical">Technical</option>
-              </select>
+              <Select value={selectedStrategy} onValueChange={setSelectedStrategy}>
+                <SelectTrigger id="strategy" className="w-full">
+                  <SelectValue placeholder="All Strategies" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Strategies</SelectItem>
+                  <SelectItem value="momentum">Momentum</SelectItem>
+                  <SelectItem value="mean-reversion">Mean Reversion</SelectItem>
+                  <SelectItem value="growth">Growth</SelectItem>
+                  <SelectItem value="value">Value</SelectItem>
+                  <SelectItem value="technical">Technical</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="side">Side</Label>
-              <select
-                id="side"
-                value={selectedSide}
-                onChange={(e) => setSelectedSide(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Sides</option>
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-              </select>
+              <Select value={selectedSide} onValueChange={setSelectedSide}>
+                <SelectTrigger id="side" className="w-full">
+                  <SelectValue placeholder="All Sides" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sides</SelectItem>
+                  <SelectItem value="buy">Buy</SelectItem>
+                  <SelectItem value="sell">Sell</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sort">Sort By</Label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="timestamp">Date</option>
-                <option value="pnl">P&L</option>
-                <option value="value">Value</option>
-                <option value="symbol">Symbol</option>
-              </select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger id="sort" className="w-full">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="timestamp">Date</SelectItem>
+                  <SelectItem value="pnl">P&L</SelectItem>
+                  <SelectItem value="value">Value</SelectItem>
+                  <SelectItem value="symbol">Symbol</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
@@ -428,13 +644,29 @@ const TradesPage = () => {
                     <td className="p-2">{formatDate(trade.timestamp)}</td>
                     <td className="p-2">
                       <div className="flex items-center justify-center space-x-1">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewTrade(trade)}
+                          title="View Details"
+                        >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditTrade(trade)}
+                          title="Edit Trade"
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDeleteTrade(trade)}
+                          title="Delete Trade"
+                          className="text-red-600 hover:text-red-700"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -502,6 +734,111 @@ const TradesPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* INLINE TRADE FORM */}
+      {isAddingTrade && (
+        <Card className="border-2 border-blue-200 bg-blue-50/50">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              {editingTradeId ? 'Edit Trade' : 'Add New Trade'}
+              <Button variant="ghost" size="sm" onClick={handleCancelForm}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="symbol">Stock Symbol *</Label>
+                  <Input
+                    id="symbol"
+                    value={newTrade.symbol}
+                    onChange={(e) => setNewTrade({ ...newTrade, symbol: e.target.value.toUpperCase() })}
+                    placeholder="Enter stock symbol"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="side">Side</Label>
+                  <Select value={newTrade.side} onValueChange={(value: 'buy' | 'sell') => setNewTrade({ ...newTrade, side: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="buy">Buy</SelectItem>
+                      <SelectItem value="sell">Sell</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <Label htmlFor="quantity">Quantity *</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    value={newTrade.quantity}
+                    onChange={(e) => setNewTrade({ ...newTrade, quantity: parseInt(e.target.value) || 0 })}
+                    placeholder="Enter quantity"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="price">Price *</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    step="0.01"
+                    value={newTrade.price}
+                    onChange={(e) => setNewTrade({ ...newTrade, price: parseFloat(e.target.value) || 0 })}
+                    placeholder="Enter price"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="type">Type</Label>
+                  <Select value={newTrade.type} onValueChange={(value: 'market' | 'limit') => setNewTrade({ ...newTrade, type: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="market">Market</SelectItem>
+                      <SelectItem value="limit">Limit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="strategy">Strategy</Label>
+                  <Select value={newTrade.strategy} onValueChange={(value) => setNewTrade({ ...newTrade, strategy: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="momentum">Momentum</SelectItem>
+                      <SelectItem value="mean-reversion">Mean Reversion</SelectItem>
+                      <SelectItem value="growth">Growth</SelectItem>
+                      <SelectItem value="value">Value</SelectItem>
+                      <SelectItem value="technical">Technical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex space-x-2 pt-2">
+                <Button onClick={editingTradeId ? handleUpdateTrade : handleSaveTrade} className="flex-1">
+                  <Save className="mr-2 h-4 w-4" />
+                  {editingTradeId ? 'Update Trade' : 'Add Trade'}
+                </Button>
+                <Button variant="outline" onClick={handleCancelForm} className="flex-1">
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

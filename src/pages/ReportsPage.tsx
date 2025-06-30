@@ -37,6 +37,13 @@ import {
   RefreshCw,
   Shield
 } from 'lucide-react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
 
 // Mock reports data
 const reports = [
@@ -348,62 +355,62 @@ const ReportsPage = () => {
             </div>
             <div>
               <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Status</option>
-                <option value="generated">Generated</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="in_progress">In Progress</option>
-                <option value="failed">Failed</option>
-              </select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger id="status" className="w-full">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="generated">Generated</SelectItem>
+                  <SelectItem value="scheduled">Scheduled</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="type">Type</Label>
-              <select
-                id="type"
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Types</option>
-                <option value="performance">Performance</option>
-                <option value="risk">Risk</option>
-                <option value="trading">Trading</option>
-                <option value="investor">Investor</option>
-                <option value="compliance">Compliance</option>
-              </select>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger id="type" className="w-full">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="performance">Performance</SelectItem>
+                  <SelectItem value="risk">Risk</SelectItem>
+                  <SelectItem value="trading">Trading</SelectItem>
+                  <SelectItem value="investor">Investor</SelectItem>
+                  <SelectItem value="compliance">Compliance</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="format">Format</Label>
-              <select
-                id="format"
-                value={selectedFormat}
-                onChange={(e) => setSelectedFormat(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Formats</option>
-                <option value="pdf">PDF</option>
-                <option value="excel">Excel</option>
-                <option value="dashboard">Dashboard</option>
-              </select>
+              <Select value={selectedFormat} onValueChange={setSelectedFormat}>
+                <SelectTrigger id="format" className="w-full">
+                  <SelectValue placeholder="All Formats" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Formats</SelectItem>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                  <SelectItem value="excel">Excel</SelectItem>
+                  <SelectItem value="dashboard">Dashboard</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sort">Sort By</Label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="lastGenerated">Last Generated</option>
-                <option value="title">Title</option>
-                <option value="type">Type</option>
-                <option value="status">Status</option>
-              </select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger id="sort" className="w-full">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="lastGenerated">Last Generated</SelectItem>
+                  <SelectItem value="title">Title</SelectItem>
+                  <SelectItem value="type">Type</SelectItem>
+                  <SelectItem value="status">Status</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>

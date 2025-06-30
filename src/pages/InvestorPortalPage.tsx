@@ -5,6 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -34,6 +41,15 @@ import {
   Shield,
   Activity
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 // Mock investor data
 const investors = [
@@ -159,6 +175,10 @@ const InvestorPortalPage = () => {
   const [selectedType, setSelectedType] = useState('all');
   const [selectedRisk, setSelectedRisk] = useState('all');
   const [sortBy, setSortBy] = useState('name');
+  const [selectedInvestor, setSelectedInvestor] = useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const filteredInvestors = investors.filter(investor => {
     const matchesSearch = investor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -237,6 +257,55 @@ const InvestorPortalPage = () => {
     });
   };
 
+  const handleViewInvestor = (investor: any) => {
+    setSelectedInvestor(investor);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleDeleteInvestor = (investor: any) => {
+    setSelectedInvestor(investor);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleSendEmail = (investor: any) => {
+    toast({
+      title: "Email Sent",
+      description: `Email sent to ${investor.name} at ${investor.email}`,
+    });
+  };
+
+  const handleCallInvestor = (investor: any) => {
+    toast({
+      title: "Call Initiated",
+      description: `Calling ${investor.name} at ${investor.phone}`,
+    });
+  };
+
+  const handleExportData = () => {
+    toast({
+      title: "Export Started",
+      description: "Investor data export has been initiated. You will receive an email when ready.",
+    });
+  };
+
+  const handleAddInvestor = () => {
+    toast({
+      title: "Add Investor",
+      description: "Add investor functionality will be implemented here.",
+    });
+  };
+
+  const confirmDelete = () => {
+    if (selectedInvestor) {
+      toast({
+        title: "Investor Deleted",
+        description: `${selectedInvestor.name} has been removed from the system.`,
+      });
+      setIsDeleteDialogOpen(false);
+      setSelectedInvestor(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -244,15 +313,15 @@ const InvestorPortalPage = () => {
         <div>
           <h1 className="text-3xl font-bold">Investor Portal</h1>
           <p className="text-muted-foreground">
-            Manage investor relationships, accounts, and communications
+            Manage investor relationships and portfolio performance
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleExportData}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button>
+          <Button onClick={handleAddInvestor}>
             <Plus className="w-4 h-4 mr-2" />
             Add Investor
           </Button>
@@ -336,59 +405,59 @@ const InvestorPortalPage = () => {
             </div>
             <div>
               <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="pending">Pending</option>
-                <option value="inactive">Inactive</option>
-              </select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger id="status" className="w-full">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="type">Type</Label>
-              <select
-                id="type"
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Types</option>
-                <option value="individual">Individual</option>
-                <option value="institutional">Institutional</option>
-                <option value="family_office">Family Office</option>
-              </select>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger id="type" className="w-full">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="individual">Individual</SelectItem>
+                  <SelectItem value="institutional">Institutional</SelectItem>
+                  <SelectItem value="family_office">Family Office</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="risk">Risk Profile</Label>
-              <select
-                id="risk"
-                value={selectedRisk}
-                onChange={(e) => setSelectedRisk(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="all">All Risk Levels</option>
-                <option value="conservative">Conservative</option>
-                <option value="moderate">Moderate</option>
-                <option value="aggressive">Aggressive</option>
-              </select>
+              <Select value={selectedRisk} onValueChange={setSelectedRisk}>
+                <SelectTrigger id="risk" className="w-full">
+                  <SelectValue placeholder="All Risk Levels" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Risk Levels</SelectItem>
+                  <SelectItem value="conservative">Conservative</SelectItem>
+                  <SelectItem value="moderate">Moderate</SelectItem>
+                  <SelectItem value="aggressive">Aggressive</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sort">Sort By</Label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="name">Name</option>
-                <option value="investment">Investment</option>
-                <option value="return">Return</option>
-                <option value="date">Join Date</option>
-              </select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger id="sort" className="w-full">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="investment">Investment</SelectItem>
+                  <SelectItem value="return">Return</SelectItem>
+                  <SelectItem value="date">Join Date</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
@@ -461,14 +530,38 @@ const InvestorPortalPage = () => {
                     <td className="p-2">{formatDate(investor.joinDate)}</td>
                     <td className="p-2">
                       <div className="flex items-center justify-center space-x-1">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewInvestor(investor)}
+                          title="View Details"
+                        >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleSendEmail(investor)}
+                          title="Send Email"
+                        >
                           <Mail className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleCallInvestor(investor)}
+                          title="Call Investor"
+                        >
+                          <Phone className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDeleteInvestor(investor)}
+                          title="Delete Investor"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     </td>
@@ -542,6 +635,76 @@ const InvestorPortalPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* View Investor Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Investor Details</DialogTitle>
+            <DialogDescription>
+              Detailed information about {selectedInvestor?.name}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedInvestor && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Name</Label>
+                  <p className="font-medium">{selectedInvestor.name}</p>
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <p className="font-medium">{selectedInvestor.email}</p>
+                </div>
+                <div>
+                  <Label>Phone</Label>
+                  <p className="font-medium">{selectedInvestor.phone}</p>
+                </div>
+                <div>
+                  <Label>Type</Label>
+                  <p className="font-medium">{selectedInvestor.type}</p>
+                </div>
+                <div>
+                  <Label>Total Investment</Label>
+                  <p className="font-medium">{formatCurrency(selectedInvestor.totalInvestment)}</p>
+                </div>
+                <div>
+                  <Label>Current Value</Label>
+                  <p className="font-medium">{formatCurrency(selectedInvestor.currentValue)}</p>
+                </div>
+                <div>
+                  <Label>Total Return</Label>
+                  <p className="font-medium">{formatPercentage(selectedInvestor.totalReturn)}</p>
+                </div>
+                <div>
+                  <Label>Risk Profile</Label>
+                  <p className="font-medium">{selectedInvestor.riskProfile}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Investor</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedInvestor?.name}? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
