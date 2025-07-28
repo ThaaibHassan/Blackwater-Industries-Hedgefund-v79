@@ -225,19 +225,24 @@ const ResearchPage = () => {
     if (newNote.title && newNote.symbols.length > 0 && newNote.content) {
       const now = new Date();
       const createdNote: ResearchNote = {
-        id: `research_${Date.now()}`,
-        ...newNote,
-        analystId: "user_001", // Mock current user
-        analystName: "Current User",
+        id: Date.now().toString(),
+        title: newNote.title,
+        content: newNote.content,
+        analystId: 'current-user',
+        analystName: 'Current User',
         assetClass: 'equity',
+        symbol: newNote.symbols[0] || 'N/A',
+        symbols: newNote.symbols,
         tags: [],
         status: 'draft',
-        createdAt: now,
-        updatedAt: now,
+        priority: newNote.priority,
+        recommendation: 'hold',
+        dueDate: newNote.dueDate,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         attachments: [],
         version: 1,
-        isPublic: false,
-        dueDate: newNote.dueDate ?? new Date(),
+        isPublic: false
       };
       // researchNotes.push(createdNote);
       toast({

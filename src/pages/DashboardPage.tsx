@@ -535,7 +535,7 @@ const DashboardPage = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-sm font-medium ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`text-sm font-medium ${(trade.pnl || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {formatCurrency(trade.pnl)}
                     </p>
                     <p className="text-xs text-muted-foreground">

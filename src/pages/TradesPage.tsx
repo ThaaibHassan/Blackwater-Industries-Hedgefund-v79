@@ -69,7 +69,7 @@ const TradesPage = () => {
       case 'timestamp':
         return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       case 'pnl':
-        return b.pnl - a.pnl;
+        return (b.pnl || 0) - (a.pnl || 0);
       case 'value':
         return b.totalValue - a.totalValue;
       case 'symbol':
@@ -81,9 +81,9 @@ const TradesPage = () => {
 
   const totalTrades = trades.length;
   const executedTrades = trades.filter(t => t.status === 'executed').length;
-  const totalPnl = trades.reduce((sum, t) => sum + t.pnl, 0);
+  const totalPnl = trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
   const winRate = executedTrades > 0 ? 
-    (trades.filter(t => t.status === 'executed' && t.pnl > 0).length / executedTrades * 100) : 0;
+    (trades.filter(t => t.status === 'executed' && (t.pnl || 0) > 0).length / executedTrades * 100) : 0;
 
   const formatCurrency = (amount: number) => {
     if (amount >= 1e6) return `$${(amount / 1e6).toFixed(1)}M`;
@@ -451,15 +451,15 @@ const TradesPage = () => {
                     <td className="p-2 text-right">${trade.price.toFixed(2)}</td>
                     <td className="p-2 text-right">{formatCurrency(trade.totalValue)}</td>
                     <td className="p-2 text-right">
-                      <div className={`font-medium ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {formatCurrency(trade.pnl)}
+                      <div className={`font-medium ${(trade.pnl || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatCurrency(trade.pnl || 0)}
                       </div>
                     </td>
                     <td className="p-2">
                       <Badge variant="outline">{trade.strategy}</Badge>
                     </td>
                     <td className="p-2">{trade.analyst}</td>
-                    <td className="p-2">{formatDate(trade.timestamp)}</td>
+                    <td className="p-2">{formatDate(trade.timestamp.toISOString())}</td>
                     <td className="p-2">
                       <div className="flex items-center justify-center space-x-1">
                         <Button 
@@ -528,10 +528,10 @@ const TradesPage = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-sm font-medium ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {formatCurrency(trade.pnl)}
+                    <p className={`text-sm font-medium ${(trade.pnl || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatCurrency(trade.pnl || 0)}
                     </p>
-                    <p className="text-xs text-muted-foreground">{formatDate(trade.timestamp)}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(trade.timestamp.toISOString())}</p>
                   </div>
                 </div>
               ))}

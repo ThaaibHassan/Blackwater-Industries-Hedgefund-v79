@@ -1,92 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useToast } from '@/hooks/use-toast';
-import { db } from "@/lib/firebase";
-import {
-  collection,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  Timestamp,
-} from "firebase/firestore";
-import { useAuth } from "./AuthContext";
-import { Task } from '@/types';
-
-// Types for all data entities
-interface Investor {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  type: 'individual' | 'institutional' | 'family_office' | 'hnwi' | 'uhnwi' | 'founder_entrepreneur' | 'corporate' | 'institutional_investor';
-  status: 'active' | 'pending' | 'inactive';
-  totalCommitment: number;
-  currentBalance: number;
-  allocatedAmount: number;
-  unallocatedAmount: number;
-  kycStatus: 'approved' | 'pending' | 'rejected';
-  assignedManager: string;
-  lastContact: string;
-  createdAt: Date;
-  updatedAt: Date;
-  inceptionDate: Date;
-}
-
-interface PortfolioPosition {
-  id: string;
-  symbol: string;
-  name: string;
-  side: 'long' | 'short';
-  quantity: number;
-  avgPrice: number;
-  currentPrice: number;
-  marketValue: number;
-  unrealizedPnl: number;
-  pnlPercent: number;
-  weight: number;
-  sector: string;
-  risk: 'low' | 'medium' | 'high';
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ResearchNote {
-  id: string;
-  title: string;
-  symbol: string;
-  author: string;
-  date: string;
-  summary: string;
-  status: 'published' | 'draft' | 'review';
-  rating: number;
-  views: number;
-  recommendation: 'buy' | 'hold' | 'sell';
-  priceTarget: number;
-  riskLevel: 'low' | 'medium' | 'high';
-  category: string;
-  tags: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  dueDate: Date;
-}
-
-interface Trade {
-  id: string;
-  symbol: string;
-  side: 'buy' | 'sell';
-  quantity: number;
-  price: number;
-  totalValue: number;
-  pnl: number;
-  status: 'executed' | 'pending' | 'cancelled';
-  type: 'market' | 'limit' | 'stop';
-  strategy: string;
-  analyst: string;
-  timestamp: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { 
+  Investor, 
+  ResearchNote, 
+  Trade, 
+  Task, 
+  PortfolioPosition 
+} from '@/types';
 
 interface Workflow {
   id: string;
@@ -178,7 +97,7 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const useData = () => {
   const context = useContext(DataContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useData must be used within a DataProvider');
   }
   return context;
@@ -189,425 +108,478 @@ interface DataProviderProps {
 }
 
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-  const { toast } = useToast();
-  const { user } = useAuth();
-  
-  // Initial data
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [investors, setInvestors] = useState<Investor[]>([]);
-  const [portfolioPositions, setPortfolioPositions] = useState<PortfolioPosition[]>([]);
-  const [researchNotes, setResearchNotes] = useState<ResearchNote[]>([]);
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [workflows, setWorkflows] = useState<Workflow[]>([]);
+  // Mock data state
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: '1',
+      title: 'Review Q4 Portfolio Performance',
+      description: 'Analyze portfolio performance and prepare quarterly report',
+      type: 'report_preparation',
+      status: 'pending',
+      priority: 'high',
+      assigneeId: 'user1',
+      assigneeName: 'John Smith',
+      dueDate: new Date('2024-01-15'),
+      checklist: [
+        { id: '1', description: 'Calculate returns', isCompleted: false },
+        { id: '2', description: 'Risk analysis', isCompleted: false },
+        { id: '3', description: 'Prepare charts', isCompleted: false }
+      ],
+      tags: ['portfolio', 'reporting'],
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01')
+    },
+    {
+      id: '2',
+      title: 'Approve New Trade Strategy',
+      description: 'Review and approve the new algorithmic trading strategy',
+      type: 'trade_review',
+      status: 'in_progress',
+      priority: 'urgent',
+      assigneeId: 'user2',
+      assigneeName: 'Sarah Johnson',
+      dueDate: new Date('2024-01-10'),
+      checklist: [
+        { id: '1', description: 'Strategy review', isCompleted: true },
+        { id: '2', description: 'Risk assessment', isCompleted: false },
+        { id: '3', description: 'Compliance check', isCompleted: false }
+      ],
+      tags: ['trading', 'strategy'],
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01')
+    }
+  ]);
 
-  // Real-time Firestore listeners
-  useEffect(() => {
-    // Tasks
-    const unsubTasks = onSnapshot(collection(db, 'tasks'), (snapshot) => {
-      setTasks(snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.() || new Date(),
-          dueDate: data.dueDate?.toDate?.() || (typeof data.dueDate === 'string' ? new Date(data.dueDate) : new Date()),
-        } as Task;
-      }));
-    });
-    // Investors
-    const unsubInvestors = onSnapshot(collection(db, 'investors'), (snapshot) => {
-      setInvestors(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate?.() || new Date() }) as Investor));
-    });
-    // Portfolio Positions
-    const unsubPositions = onSnapshot(collection(db, 'portfolioPositions'), (snapshot) => {
-      setPortfolioPositions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate?.() || new Date() }) as PortfolioPosition));
-    });
-    // Research Notes
-    const unsubResearch = onSnapshot(collection(db, 'researchNotes'), (snapshot) => {
-      setResearchNotes(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate?.() || new Date() }) as ResearchNote));
-    });
-    // Trades
-    const unsubTrades = onSnapshot(collection(db, 'trades'), (snapshot) => {
-      setTrades(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate?.() || new Date() }) as Trade));
-    });
-    // Workflows
-    const unsubWorkflows = onSnapshot(collection(db, 'workflows'), (snapshot) => {
-      setWorkflows(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate?.() || new Date() }) as Workflow));
-    });
-    return () => {
-      unsubTasks();
-      unsubInvestors();
-      unsubPositions();
-      unsubResearch();
-      unsubTrades();
-      unsubWorkflows();
-    };
-  }, []);
+  const [investors, setInvestors] = useState<Investor[]>([
+    {
+      id: '1',
+      name: 'Acme Capital Partners',
+      email: 'contact@acmecapital.com',
+      phone: '+1-555-0123',
+      type: 'institutional',
+      status: 'active',
+      totalCommitment: 5000000,
+      currentBalance: 5000000,
+      totalInvestment: 4500000,
+      currentValue: 4850000,
+      totalReturn: 7.8,
+      riskProfile: 'moderate',
+      joinDate: new Date('2023-01-15'),
+      inceptionDate: new Date('2023-01-15'),
+      kycStatus: 'approved',
+      documents: [],
+      assignedManager: 'John Smith',
+      createdAt: new Date('2023-01-15'),
+      updatedAt: new Date('2024-01-01')
+    },
+    {
+      id: '2',
+      name: 'Smith Family Office',
+      email: 'investments@smithfamily.com',
+      phone: '+1-555-0456',
+      type: 'family_office',
+      status: 'active',
+      totalCommitment: 2500000,
+      currentBalance: 2500000,
+      totalInvestment: 2200000,
+      currentValue: 2350000,
+      totalReturn: 6.8,
+      riskProfile: 'conservative',
+      joinDate: new Date('2023-03-20'),
+      inceptionDate: new Date('2023-03-20'),
+      kycStatus: 'approved',
+      documents: [],
+      assignedManager: 'Sarah Johnson',
+      createdAt: new Date('2023-03-20'),
+      updatedAt: new Date('2024-01-01')
+    }
+  ]);
+
+  const [portfolioPositions, setPortfolioPositions] = useState<PortfolioPosition[]>([
+    {
+      id: '1',
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      side: 'long',
+      quantity: 1000,
+      avgPrice: 150.00,
+      currentPrice: 175.50,
+      marketValue: 175500,
+      unrealizedPnl: 25500,
+      pnlPercent: 17.0,
+      weight: 15.2,
+      sector: 'Technology',
+      risk: 'medium',
+      createdAt: new Date('2023-06-15')
+    },
+    {
+      id: '2',
+      symbol: 'MSFT',
+      name: 'Microsoft Corporation',
+      side: 'long',
+      quantity: 800,
+      avgPrice: 280.00,
+      currentPrice: 320.75,
+      marketValue: 256600,
+      unrealizedPnl: 32600,
+      pnlPercent: 14.5,
+      weight: 22.1,
+      sector: 'Technology',
+      risk: 'medium',
+      createdAt: new Date('2023-05-10')
+    }
+  ]);
+
+  const [researchNotes, setResearchNotes] = useState<ResearchNote[]>([
+    {
+      id: '1',
+      title: 'Apple Q4 Earnings Analysis',
+      content: 'Comprehensive analysis of Apple\'s Q4 earnings report and future outlook.',
+      analystId: 'analyst1',
+      analystName: 'Michael Chen',
+      assetClass: 'equity',
+      symbol: 'AAPL',
+      symbols: ['AAPL'],
+      tags: ['earnings', 'technology', 'analysis'],
+      status: 'published',
+      priority: 'high',
+      recommendation: 'buy',
+      dueDate: new Date('2024-01-20'),
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+      attachments: [],
+      version: 1,
+      isPublic: true
+    },
+    {
+      id: '2',
+      title: 'Microsoft Cloud Growth Prospects',
+      content: 'Analysis of Microsoft\'s cloud business growth and competitive position.',
+      analystId: 'analyst2',
+      analystName: 'Lisa Rodriguez',
+      assetClass: 'equity',
+      symbol: 'MSFT',
+      symbols: ['MSFT'],
+      tags: ['cloud', 'technology', 'growth'],
+      status: 'published',
+      priority: 'medium',
+      recommendation: 'hold',
+      dueDate: new Date('2024-01-25'),
+      createdAt: new Date('2024-01-02'),
+      updatedAt: new Date('2024-01-02'),
+      attachments: [],
+      version: 1,
+      isPublic: true
+    }
+  ]);
+
+  const [trades, setTrades] = useState<Trade[]>([
+    {
+      id: '1',
+      portfolioId: 'portfolio1',
+      symbol: 'AAPL',
+      assetClass: 'equity',
+      side: 'buy',
+      quantity: 500,
+      price: 150.00,
+      totalValue: 75000,
+      commission: 25,
+      timestamp: new Date('2024-01-05'),
+      status: 'executed',
+      tags: ['technology', 'long'],
+      riskMetrics: {
+        positionSize: 5.2,
+        maxRisk: 7500
+      },
+      pnl: 12750
+    },
+    {
+      id: '2',
+      portfolioId: 'portfolio1',
+      symbol: 'MSFT',
+      assetClass: 'equity',
+      side: 'buy',
+      quantity: 300,
+      price: 280.00,
+      totalValue: 84000,
+      commission: 30,
+      timestamp: new Date('2024-01-06'),
+      status: 'executed',
+      tags: ['technology', 'long'],
+      riskMetrics: {
+        positionSize: 7.2,
+        maxRisk: 8400
+      },
+      pnl: 12225
+    }
+  ]);
+
+  const [workflows, setWorkflows] = useState<Workflow[]>([
+    {
+      id: '1',
+      title: 'Q4 Portfolio Review',
+      status: 'completed',
+      assignee: 'John Smith',
+      completedAt: '2024-01-15',
+      startedAt: '2024-01-01',
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-15')
+    },
+    {
+      id: '2',
+      title: 'New Strategy Implementation',
+      status: 'in_progress',
+      assignee: 'Sarah Johnson',
+      startedAt: '2024-01-10',
+      createdAt: new Date('2024-01-10'),
+      updatedAt: new Date('2024-01-10')
+    }
+  ]);
 
   // Task actions
   const addTask = async (task: Task) => {
-    await addDoc(collection(db, 'tasks'), {
-      ...task,
-      status: 'pending',
-      dueDate: task.dueDate instanceof Date ? Timestamp.fromDate(task.dueDate) : task.dueDate,
-      createdAt: task.createdAt instanceof Date ? Timestamp.fromDate(task.createdAt) : Timestamp.now(),
-      updatedAt: task.updatedAt instanceof Date ? Timestamp.fromDate(task.updatedAt) : Timestamp.now(),
-      completedAt: task.completedAt instanceof Date ? Timestamp.fromDate(task.completedAt) : undefined,
-    });
-    toast({
-      title: "Task Added",
-      description: "New task has been created successfully.",
-    });
+    const newTask = { ...task, id: Date.now().toString() };
+    setTasks(prev => [...prev, newTask]);
   };
 
   const updateTask = async (task: Task) => {
-    await updateDoc(doc(db, 'tasks', task.id), {
-      ...task,
-      status: task.status,
-      dueDate: task.dueDate instanceof Date ? Timestamp.fromDate(task.dueDate) : task.dueDate,
-      createdAt: task.createdAt instanceof Date ? Timestamp.fromDate(task.createdAt) : task.createdAt,
-      updatedAt: task.updatedAt instanceof Date ? Timestamp.fromDate(task.updatedAt) : Timestamp.now(),
-      completedAt: task.completedAt instanceof Date ? Timestamp.fromDate(task.completedAt) : undefined,
-    });
-    toast({
-      title: "Task Updated",
-      description: "Task has been updated successfully.",
-    });
+    setTasks(prev => prev.map(t => t.id === task.id ? task : t));
   };
 
   const deleteTask = async (id: string) => {
-    await deleteDoc(doc(db, 'tasks', id));
-    toast({
-      title: 'Task Deleted',
-      description: 'Task has been removed.',
-    });
+    setTasks(prev => prev.filter(t => t.id !== id));
   };
 
   const completeTask = async (id: string) => {
-    const task = tasks.find((t) => t.id === id);
-    if (task) {
-      await updateDoc(doc(db, 'tasks', id), {
-        ...task,
-        status: 'completed',
-        updatedAt: Timestamp.now(),
-        completedAt: Timestamp.now(),
-        dueDate: task.dueDate instanceof Date ? Timestamp.fromDate(task.dueDate) : task.dueDate,
-        createdAt: task.createdAt instanceof Date ? Timestamp.fromDate(task.createdAt) : task.createdAt,
-      });
-      toast({
-        title: 'Task Completed',
-        description: 'Task has been marked as completed.',
-      });
-    }
+    setTasks(prev => prev.map(t => 
+      t.id === id 
+        ? { ...t, status: 'completed' as const, completedAt: new Date() }
+        : t
+    ));
   };
 
   const startTask = async (id: string) => {
-    const task = tasks.find((t) => t.id === id);
-    if (task) {
-      await updateDoc(doc(db, 'tasks', id), {
-        ...task,
-        status: 'in_progress',
-        updatedAt: Timestamp.now(),
-        dueDate: task.dueDate instanceof Date ? Timestamp.fromDate(task.dueDate) : task.dueDate,
-        createdAt: task.createdAt instanceof Date ? Timestamp.fromDate(task.createdAt) : task.createdAt,
-      });
-      toast({
-        title: 'Task Started',
-        description: 'Task has been started.',
-      });
-    }
+    setTasks(prev => prev.map(t => 
+      t.id === id 
+        ? { ...t, status: 'in_progress' as const }
+        : t
+    ));
   };
 
   // Investor actions
   const addInvestor = async (investorData: Omit<Investor, 'id' | 'currentBalance' | 'createdAt'>) => {
-    await addDoc(collection(db, 'investors'), {
+    const newInvestor: Investor = {
       ...investorData,
-      currentBalance: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      inceptionDate: investorData.inceptionDate instanceof Date ? Timestamp.fromDate(investorData.inceptionDate) : investorData.inceptionDate,
-    });
-    toast({
-      title: "Investor Added",
-      description: "New investor has been added successfully.",
-    });
+      id: Date.now().toString(),
+      currentBalance: investorData.totalCommitment,
+      createdAt: new Date()
+    };
+    setInvestors(prev => [...prev, newInvestor]);
   };
 
   const updateInvestor = async (id: string, updates: Partial<Investor>) => {
-    await updateDoc(doc(db, 'investors', id), {
-      ...updates,
-      updatedAt: updates.updatedAt instanceof Date ? Timestamp.fromDate(updates.updatedAt) : Timestamp.now(),
-      inceptionDate: updates.inceptionDate instanceof Date ? Timestamp.fromDate(updates.inceptionDate) : updates.inceptionDate,
-    });
-    toast({
-      title: "Investor Updated",
-      description: "Investor has been updated successfully.",
-    });
+    setInvestors(prev => prev.map(i => 
+      i.id === id ? { ...i, ...updates, updatedAt: new Date() } : i
+    ));
   };
 
   const deleteInvestor = async (id: string) => {
-    await deleteDoc(doc(db, 'investors', id));
-    toast({
-      title: "Investor Deleted",
-      description: "Investor has been removed.",
-    });
+    setInvestors(prev => prev.filter(i => i.id !== id));
   };
 
   // Portfolio actions
   const addPosition = async (positionData: Omit<PortfolioPosition, 'id' | 'marketValue' | 'unrealizedPnl' | 'pnlPercent' | 'createdAt'>) => {
-    await addDoc(collection(db, 'portfolioPositions'), {
+    const marketValue = positionData.quantity * positionData.currentPrice;
+    const unrealizedPnl = (positionData.currentPrice - positionData.avgPrice) * positionData.quantity;
+    const pnlPercent = (unrealizedPnl / (positionData.avgPrice * positionData.quantity)) * 100;
+    
+    const newPosition: PortfolioPosition = {
       ...positionData,
-      marketValue: 0,
-      unrealizedPnl: 0,
-      pnlPercent: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    toast({
-      title: "Position Added",
-      description: "New position has been added successfully.",
-    });
+      id: Date.now().toString(),
+      marketValue,
+      unrealizedPnl,
+      pnlPercent,
+      createdAt: new Date()
+    };
+    setPortfolioPositions(prev => [...prev, newPosition]);
   };
 
   const updatePosition = async (id: string, updates: Partial<PortfolioPosition>) => {
-    await updateDoc(doc(db, 'portfolioPositions', id), {
-      ...updates,
-      updatedAt: updates.updatedAt instanceof Date ? Timestamp.fromDate(updates.updatedAt) : Timestamp.now(),
-    });
-    toast({
-      title: "Position Updated",
-      description: "Position has been updated successfully.",
-    });
+    setPortfolioPositions(prev => prev.map(p => 
+      p.id === id ? { ...p, ...updates } : p
+    ));
   };
 
   const deletePosition = async (id: string) => {
-    await deleteDoc(doc(db, 'portfolioPositions', id));
-    toast({
-      title: "Position Deleted",
-      description: "Position has been removed.",
-    });
+    setPortfolioPositions(prev => prev.filter(p => p.id !== id));
   };
 
   // Research actions
   const addResearchNote = async (noteData: Omit<ResearchNote, 'id' | 'rating' | 'views' | 'createdAt'>) => {
-    await addDoc(collection(db, 'researchNotes'), {
+    const newNote: ResearchNote = {
       ...noteData,
-      rating: 0,
-      views: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      dueDate: noteData.dueDate instanceof Date ? Timestamp.fromDate(noteData.dueDate) : noteData.dueDate,
-    });
-    toast({
-      title: "Research Note Added",
-      description: "New research note has been added successfully.",
-    });
+      id: Date.now().toString(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    setResearchNotes(prev => [...prev, newNote]);
   };
 
   const updateResearchNote = async (id: string, updates: Partial<ResearchNote>) => {
-    await updateDoc(doc(db, 'researchNotes', id), {
-      ...updates,
-      updatedAt: updates.updatedAt instanceof Date ? Timestamp.fromDate(updates.updatedAt) : Timestamp.now(),
-      dueDate: updates.dueDate instanceof Date ? Timestamp.fromDate(updates.dueDate) : updates.dueDate,
-    });
-    toast({
-      title: "Research Note Updated",
-      description: "Research note has been updated successfully.",
-    });
+    setResearchNotes(prev => prev.map(n => 
+      n.id === id ? { ...n, ...updates, updatedAt: new Date() } : n
+    ));
   };
 
   const deleteResearchNote = async (id: string) => {
-    await deleteDoc(doc(db, 'researchNotes', id));
-    toast({
-      title: "Research Note Deleted",
-      description: "Research note has been removed.",
-    });
+    setResearchNotes(prev => prev.filter(n => n.id !== id));
   };
 
   const rateResearchNote = async (id: string, rating: number) => {
-    await updateDoc(doc(db, 'researchNotes', id), { rating });
-    toast({
-      title: "Research Note Rated",
-      description: "Research note has been rated successfully.",
-    });
+    setResearchNotes(prev => prev.map(n => 
+      n.id === id ? { ...n, rating } : n
+    ));
   };
 
   // Trade actions
   const addTrade = async (tradeData: Omit<Trade, 'id' | 'totalValue' | 'pnl' | 'createdAt'>) => {
-    await addDoc(collection(db, 'trades'), {
+    const totalValue = tradeData.quantity * tradeData.price;
+    const newTrade: Trade = {
       ...tradeData,
-      totalValue: 0,
+      id: Date.now().toString(),
+      totalValue,
       pnl: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    toast({
-      title: "Trade Added",
-      description: "New trade has been added successfully.",
-    });
+      timestamp: new Date()
+    };
+    setTrades(prev => [...prev, newTrade]);
   };
 
   const updateTrade = async (id: string, updates: Partial<Trade>) => {
-    await updateDoc(doc(db, 'trades', id), {
-      ...updates,
-      updatedAt: updates.updatedAt instanceof Date ? Timestamp.fromDate(updates.updatedAt) : Timestamp.now(),
-    });
-    toast({
-      title: "Trade Updated",
-      description: "Trade has been updated successfully.",
-    });
+    setTrades(prev => prev.map(t => 
+      t.id === id ? { ...t, ...updates } : t
+    ));
   };
 
   const deleteTrade = async (id: string) => {
-    await deleteDoc(doc(db, 'trades', id));
-    toast({
-      title: "Trade Deleted",
-      description: "Trade has been removed.",
-    });
+    setTrades(prev => prev.filter(t => t.id !== id));
   };
 
   const approveTrade = async (id: string) => {
-    await updateDoc(doc(db, 'trades', id), { status: 'executed' });
-    toast({
-      title: "Trade Approved",
-      description: "Trade has been approved successfully.",
-    });
+    setTrades(prev => prev.map(t => 
+      t.id === id ? { ...t, status: 'executed' as const } : t
+    ));
   };
 
   const rejectTrade = async (id: string) => {
-    await updateDoc(doc(db, 'trades', id), { status: 'cancelled' });
-    toast({
-      title: "Trade Rejected",
-      description: "Trade has been rejected successfully.",
-    });
+    setTrades(prev => prev.map(t => 
+      t.id === id ? { ...t, status: 'cancelled' as const } : t
+    ));
   };
 
   // Workflow actions
   const addWorkflow = async (workflowData: Omit<Workflow, 'id' | 'createdAt'>) => {
-    await addDoc(collection(db, 'workflows'), {
+    const newWorkflow: Workflow = {
       ...workflowData,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    toast({
-      title: "Workflow Added",
-      description: "New workflow has been added successfully.",
-    });
+      id: Date.now().toString(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    setWorkflows(prev => [...prev, newWorkflow]);
   };
 
   const updateWorkflow = async (id: string, updates: Partial<Workflow>) => {
-    await updateDoc(doc(db, 'workflows', id), {
-      ...updates,
-      updatedAt: updates.updatedAt instanceof Date ? Timestamp.fromDate(updates.updatedAt) : Timestamp.now(),
-    });
-    toast({
-      title: "Workflow Updated",
-      description: "Workflow has been updated successfully.",
-    });
+    setWorkflows(prev => prev.map(w => 
+      w.id === id ? { ...w, ...updates, updatedAt: new Date() } : w
+    ));
   };
 
   const deleteWorkflow = async (id: string) => {
-    await deleteDoc(doc(db, 'workflows', id));
-    toast({
-      title: "Workflow Deleted",
-      description: "Workflow has been removed.",
-    });
+    setWorkflows(prev => prev.filter(w => w.id !== id));
   };
 
-  // Analytics functions
+  // Analytics
   const getPortfolioStats = () => {
-    const totalValue = portfolioPositions.reduce((sum, pos) => sum + (typeof pos.marketValue === 'number' && !isNaN(pos.marketValue) ? pos.marketValue : 0), 0);
-    const totalPnl = portfolioPositions.reduce((sum, pos) => sum + (typeof pos.unrealizedPnl === 'number' && !isNaN(pos.unrealizedPnl) ? pos.unrealizedPnl : 0), 0);
-    const totalPnlPercent = (totalValue && !isNaN(totalValue)) ? ((totalPnl / (totalValue || 1)) * 100) : 0;
+    const totalValue = portfolioPositions.reduce((sum, p) => sum + p.marketValue, 0);
+    const totalPnl = portfolioPositions.reduce((sum, p) => sum + p.unrealizedPnl, 0);
+    const totalPnlPercent = totalValue > 0 ? (totalPnl / (totalValue - totalPnl)) * 100 : 0;
+    
     return {
-      totalValue: isNaN(totalValue) ? 0 : totalValue,
-      totalPnl: isNaN(totalPnl) ? 0 : totalPnl,
-      totalPnlPercent: isNaN(totalPnlPercent) ? 0 : totalPnlPercent,
-      positions: portfolioPositions.length,
+      totalValue,
+      totalPnl,
+      totalPnlPercent,
+      positions: portfolioPositions.length
     };
   };
 
   const getTaskStats = () => {
-    const total = tasks.length;
-    const pending = tasks.filter(t => t.status === 'pending').length;
-    const inProgress = tasks.filter(t => t.status === 'in_progress').length;
-    const completed = tasks.filter(t => t.status === 'completed').length;
-    return { total, pending, inProgress, completed };
+    return {
+      total: tasks.length,
+      pending: tasks.filter(t => t.status === 'pending').length,
+      inProgress: tasks.filter(t => t.status === 'in_progress').length,
+      completed: tasks.filter(t => t.status === 'completed').length
+    };
   };
 
   const getInvestorStats = () => {
     const total = investors.length;
     const active = investors.filter(i => i.status === 'active').length;
-    const totalCommitments = investors.reduce((sum, i) => sum + (i.totalCommitment || 0), 0);
-    const totalBalance = investors.reduce((sum, i) => sum + (i.currentBalance || 0), 0);
-    const totalAllocated = investors.reduce((sum, i) => sum + (i.allocatedAmount || 0), 0);
-    const totalUnallocated = investors.reduce((sum, i) => sum + (i.unallocatedAmount || 0), 0);
-    const allocationPercentage = totalBalance > 0 ? (totalAllocated / totalBalance) * 100 : 0;
-    return { 
-      total, 
-      active, 
-      totalCommitments, 
-      totalBalance, 
-      totalAllocated, 
-      totalUnallocated, 
-      allocationPercentage 
+    const totalCommitments = investors.reduce((sum, i) => sum + i.totalCommitment, 0);
+    const totalBalance = investors.reduce((sum, i) => sum + i.currentBalance, 0);
+    const totalAllocated = investors.reduce((sum, i) => sum + (i.totalInvestment || 0), 0);
+    const totalUnallocated = totalCommitments - totalAllocated;
+    const allocationPercentage = totalCommitments > 0 ? (totalAllocated / totalCommitments) * 100 : 0;
+    
+    return {
+      total,
+      active,
+      totalCommitments,
+      totalBalance,
+      totalAllocated,
+      totalUnallocated,
+      allocationPercentage
     };
   };
 
   const getTradeStats = () => {
-    const total = trades.length;
-    const executed = trades.filter(t => t.status === 'executed').length;
-    const pending = trades.filter(t => t.status === 'pending').length;
-    const totalValue = trades.reduce((sum, t) => sum + (t.totalValue || 0), 0);
-    const totalPnl = trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
-    return { total, executed, pending, totalValue, totalPnl };
+    return {
+      total: trades.length,
+      executed: trades.filter(t => t.status === 'executed').length,
+      pending: trades.filter(t => t.status === 'pending').length,
+      totalValue: trades.reduce((sum, t) => sum + t.totalValue, 0),
+      totalPnl: trades.reduce((sum, t) => sum + (t.pnl || 0), 0)
+    };
   };
 
   const value: DataContextType = {
-    // State
     tasks,
     investors,
     portfolioPositions,
     researchNotes,
     trades,
     workflows,
-    
-    // Task actions
     addTask,
     updateTask,
     deleteTask,
     completeTask,
     startTask,
-    
-    // Investor actions
     addInvestor,
     updateInvestor,
     deleteInvestor,
-    
-    // Portfolio actions
     addPosition,
     updatePosition,
     deletePosition,
-    
-    // Research actions
     addResearchNote,
     updateResearchNote,
     deleteResearchNote,
     rateResearchNote,
-    
-    // Trade actions
     addTrade,
     updateTrade,
     deleteTrade,
     approveTrade,
     rejectTrade,
-    
-    // Workflow actions
     addWorkflow,
     updateWorkflow,
     deleteWorkflow,
-    
-    // Analytics
     getPortfolioStats,
     getTaskStats,
     getInvestorStats,

@@ -472,11 +472,11 @@ const InvestorsPage = () => {
                     <div className="font-medium">${(investor.currentBalance / 1000000).toFixed(1)}M</div>
                     <div className="text-sm text-muted-foreground">Current Balance</div>
                     <div className="text-xs text-muted-foreground">
-                      ${(investor.allocatedAmount / 1000000).toFixed(1)}M allocated
+                      ${((investor.allocatedAmount || 0) / 1000000).toFixed(1)}M allocated
                     </div>
-                    {investor.unallocatedAmount > 0 && (
+                    {(investor.unallocatedAmount || 0) > 0 && (
                       <div className="text-xs text-orange-600">
-                        ${(investor.unallocatedAmount / 1000000).toFixed(1)}M unallocated
+                        ${((investor.unallocatedAmount || 0) / 1000000).toFixed(1)}M unallocated
                       </div>
                     )}
                   </div>

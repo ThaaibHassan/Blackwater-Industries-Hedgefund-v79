@@ -46,6 +46,24 @@ export interface Portfolio {
   performance: PerformanceMetrics;
 }
 
+export interface PortfolioPosition {
+  id: string;
+  symbol: string;
+  name: string;
+  side: 'long' | 'short';
+  quantity: number;
+  avgPrice: number;
+  currentPrice: number;
+  marketValue: number;
+  unrealizedPnl: number;
+  pnlPercent: number;
+  weight: number;
+  sector: string;
+  risk: 'low' | 'medium' | 'high';
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
 export type InvestmentStrategy = 
   | 'long_short_equity'
   | 'global_macro'
@@ -102,6 +120,9 @@ export interface Trade {
   exitTradeId?: string; // For closing trades
   pnl?: number;
   rMultiple?: number;
+  strategy?: string;
+  analyst?: string;
+  type?: 'market' | 'limit' | 'stop';
 }
 
 export type AssetClass = 
@@ -132,6 +153,7 @@ export interface ResearchNote {
   analystId: string;
   analystName: string;
   assetClass: AssetClass;
+  symbol: string;
   symbols: string[];
   tags: string[];
   status: ResearchStatus;
@@ -142,6 +164,7 @@ export interface ResearchNote {
   attachments: Attachment[];
   version: number;
   isPublic: boolean;
+  recommendation?: 'buy' | 'sell' | 'hold';
 }
 
 export type ResearchStatus = 'draft' | 'in_review' | 'approved' | 'published' | 'archived';
@@ -165,13 +188,21 @@ export interface Investor {
   status: InvestorStatus;
   totalCommitment: number;
   currentBalance: number;
+  totalInvestment: number;
+  currentValue: number;
+  totalReturn: number;
+  riskProfile: RiskProfile;
+  joinDate: Date;
   inceptionDate: Date;
-  kycStatus: 'pending' | 'approved' | 'rejected';
+  kycStatus: 'pending' | 'approved' | 'rejected' | 'verified';
   documents: InvestorDocument[];
   notes?: string;
   assignedManager: string;
   createdAt: Date;
   updatedAt: Date;
+  allocatedAmount?: number;
+  unallocatedAmount?: number;
+  lastContact?: string;
 }
 
 export type InvestorType = 'individual' | 'institutional' | 'family_office' | 'fund_of_funds';

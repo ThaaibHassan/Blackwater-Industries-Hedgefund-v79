@@ -422,7 +422,7 @@ const InvestorPortalPage = () => {
                         {investor.kycStatus}
                       </Badge>
                     </td>
-                    <td className="p-2">{formatDate(investor.joinDate)}</td>
+                    <td className="p-2">{formatDate(investor.joinDate.toISOString())}</td>
                     <td className="p-2">
                       <div className="flex items-center justify-center space-x-1">
                         <Button 
