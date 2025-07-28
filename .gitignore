@@ -22,6 +22,11 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# Service account keys and sensitive files
+functions/lib/serviceAccountKey.json
+*.json.key
+serviceAccountKey.json
+
 # IDE and editor files
 .vscode/
 .idea/

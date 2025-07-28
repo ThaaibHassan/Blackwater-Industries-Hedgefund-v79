@@ -513,4 +513,30 @@ export interface Dashboard {
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Watchlist Types
+export interface WatchlistAsset {
+  symbol: string;
+  name: string;
+  tags?: string[];
+  [key: string]: any; // For custom columns
+}
+
+export interface WatchlistColumn {
+  id: string;
+  label: string;
+  field: string;
+  visible: boolean;
+}
+
+export interface Watchlist {
+  id: string;
+  name: string;
+  userId: string;
+  assets: WatchlistAsset[];
+  columns: WatchlistColumn[];
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
 } 

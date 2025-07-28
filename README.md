@@ -7,6 +7,7 @@ An institutional-grade hedge fund management platform built with React, TypeScri
 - **Role-Based Access Control (RBAC)**: Secure authentication with different user roles
 - **Multi-Module Architecture**: Dashboard, Portfolio, Trading, Research, Compliance, and Reporting
 - **Real-time Data**: Firebase Firestore integration for live updates
+- **MetaTrader 5 Integration**: Docker-based MT5 with real-time trading statistics
 - **Modern UI**: Built with ShadCN UI and TailwindCSS
 - **TypeScript**: Full type safety throughout the application
 - **Responsive Design**: Works seamlessly across all devices
@@ -16,6 +17,7 @@ An institutional-grade hedge fund management platform built with React, TypeScri
 - **Frontend**: React 18 + TypeScript + Vite
 - **UI Framework**: ShadCN UI + TailwindCSS
 - **Backend**: Firebase (Auth, Firestore, Storage, Functions)
+- **Trading Integration**: MetaTrader 5 + FastAPI + Docker
 - **State Management**: React Context API
 - **Routing**: React Router v6
 - **Build Tool**: Vite
@@ -73,6 +75,36 @@ npm run dev
 ```
 
 The application will be available at `http://localhost:3001`
+
+##  MetaTrader 5 Integration
+
+This platform includes a comprehensive MetaTrader 5 integration using Docker containers. The MT5 integration provides:
+
+- **Real-time Trading Statistics**: Live P&L, win rates, and performance metrics
+- **Automated Trading**: API-based trade execution and management
+- **VNC Remote Access**: Web-based access to MT5 interface
+- **Comprehensive API**: REST endpoints for all trading operations
+
+### Quick Start (Local Development)
+
+```bash
+# Start MT5 integration locally
+./start-local.sh
+
+# Access services:
+# - MT5 VNC: http://localhost:6080
+# - MT5 API: http://localhost:8000
+# - Frontend: http://localhost:3000
+```
+
+### Production Setup
+
+```bash
+# Full setup with domain configuration
+./setup-mt5.sh
+```
+
+For detailed MT5 integration documentation, see [README-MT5.md](./README-MT5.md).
 
 ##  Available Scripts
 

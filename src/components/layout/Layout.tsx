@@ -10,18 +10,17 @@ const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Fixed Sidebar */}
       <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       
-      {/* Main content area - pushed to the right */}
-      <div className="flex-1 md:ml-64 flex flex-col">
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-w-0 md:ml-64">
         <Header setIsSidebarOpen={setIsSidebarOpen} />
-        <main className={cn(
-          "flex-1 p-4 md:p-6 overflow-y-auto",
-          theme === 'dark' ? "bg-gray-800" : "bg-gray-100"
-        )}>
-          <Outlet />
+        <main className="flex-1 overflow-y-auto bg-muted/30">
+          <div className="w-full p-6">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

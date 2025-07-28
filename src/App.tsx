@@ -17,40 +17,46 @@ import PrivateRoute from './components/auth/PrivateRoute';
 import AdminRoute from './components/auth/AdminRoute';
 import UsersPage from './pages/UsersPage';
 import InvestorPortalPage from './pages/InvestorPortalPage';
+import { WatchlistProvider } from './context/WatchlistContext';
+import ScreenerPage from './pages/market/ScreenerPage';
+import MT5Page from './pages/MT5Page';
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <DataProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/investor-portal" element={<InvestorPortalPage />} />
-
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="portfolio" element={<PortfolioPage />} />
-              <Route path="trades" element={<TradesPage />} />
-              <Route path="research" element={<ResearchPage />} />
-              <Route path="investors" element={<InvestorsPage />} />
-              <Route path="reports" element={<ReportsPage />} />
-              <Route path="compliance" element={<CompliancePage />} />
-              <Route path="tasks" element={<TasksPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route element={<AdminRoute />}> 
-                <Route path="users" element={<UsersPage />} />
+          <WatchlistProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/investor-portal" element={<InvestorPortalPage />} />
+              {/* Protected Routes */}
+              <Route
+                path="/*"
+                element={
+                  <PrivateRoute>
+                    <Layout />
+                  </PrivateRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="portfolio" element={<PortfolioPage />} />
+                <Route path="trades" element={<TradesPage />} />
+                <Route path="research" element={<ResearchPage />} />
+                <Route path="investors" element={<InvestorsPage />} />
+                <Route path="reports" element={<ReportsPage />} />
+                <Route path="compliance" element={<CompliancePage />} />
+                <Route path="tasks" element={<TasksPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="screener" element={<ScreenerPage />} />
+                <Route path="mt5" element={<MT5Page />} />
+                <Route element={<AdminRoute />}>
+                  <Route path="users" element={<UsersPage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </WatchlistProvider>
         </DataProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -50,118 +50,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-
-// Mock investor data
-const investors = [
-  {
-    id: 1,
-    name: 'John Smith',
-    email: 'john.smith@email.com',
-    phone: '+1 (555) 123-4567',
-    type: 'individual',
-    status: 'active',
-    joinDate: '2023-01-15',
-    totalInvestment: 2500000,
-    currentValue: 2750000,
-    totalReturn: 10.0,
-    ytdReturn: 8.5,
-    riskProfile: 'moderate',
-    kycStatus: 'verified',
-    documents: ['w9_form.pdf', 'accredited_investor.pdf'],
-    lastActivity: '2024-01-15T10:30:00Z',
-    portfolio: {
-      fund1: { allocation: 60, value: 1650000, return: 12.5 },
-      fund2: { allocation: 25, value: 687500, return: 6.8 },
-      fund3: { allocation: 15, value: 412500, return: 4.2 }
-    }
-  },
-  {
-    id: 2,
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@company.com',
-    phone: '+1 (555) 234-5678',
-    type: 'institutional',
-    status: 'active',
-    joinDate: '2022-06-20',
-    totalInvestment: 5000000,
-    currentValue: 5450000,
-    totalReturn: 9.0,
-    ytdReturn: 7.2,
-    riskProfile: 'conservative',
-    kycStatus: 'verified',
-    documents: ['corporate_resolution.pdf', 'bank_letter.pdf'],
-    lastActivity: '2024-01-14T14:15:00Z',
-    portfolio: {
-      fund1: { allocation: 40, value: 2180000, return: 12.5 },
-      fund2: { allocation: 45, value: 2452500, return: 6.8 },
-      fund3: { allocation: 15, value: 817500, return: 4.2 }
-    }
-  },
-  {
-    id: 3,
-    name: 'Mike Chen',
-    email: 'mike.chen@startup.com',
-    phone: '+1 (555) 345-6789',
-    type: 'individual',
-    status: 'pending',
-    joinDate: '2024-01-10',
-    totalInvestment: 500000,
-    currentValue: 500000,
-    totalReturn: 0.0,
-    ytdReturn: 0.0,
-    riskProfile: 'aggressive',
-    kycStatus: 'pending',
-    documents: ['application.pdf'],
-    lastActivity: '2024-01-10T09:45:00Z',
-    portfolio: {
-      fund1: { allocation: 80, value: 400000, return: 0.0 },
-      fund2: { allocation: 20, value: 100000, return: 0.0 }
-    }
-  },
-  {
-    id: 4,
-    name: 'Lisa Wang',
-    email: 'lisa.wang@familyoffice.com',
-    phone: '+1 (555) 456-7890',
-    type: 'family_office',
-    status: 'active',
-    joinDate: '2021-12-05',
-    totalInvestment: 10000000,
-    currentValue: 11200000,
-    totalReturn: 12.0,
-    ytdReturn: 9.8,
-    riskProfile: 'moderate',
-    kycStatus: 'verified',
-    documents: ['family_office_cert.pdf', 'investment_agreement.pdf'],
-    lastActivity: '2024-01-13T11:20:00Z',
-    portfolio: {
-      fund1: { allocation: 50, value: 5600000, return: 12.5 },
-      fund2: { allocation: 30, value: 3360000, return: 6.8 },
-      fund3: { allocation: 20, value: 2240000, return: 4.2 }
-    }
-  },
-  {
-    id: 5,
-    name: 'David Kim',
-    email: 'david.kim@retirement.com',
-    phone: '+1 (555) 567-8901',
-    type: 'individual',
-    status: 'inactive',
-    joinDate: '2020-03-15',
-    totalInvestment: 1000000,
-    currentValue: 950000,
-    totalReturn: -5.0,
-    ytdReturn: -2.1,
-    riskProfile: 'conservative',
-    kycStatus: 'expired',
-    documents: ['retirement_account.pdf'],
-    lastActivity: '2023-11-20T16:00:00Z',
-    portfolio: {
-      fund1: { allocation: 30, value: 285000, return: -5.0 },
-      fund2: { allocation: 70, value: 665000, return: -5.0 }
-    }
-  }
-];
+import { useData } from '@/context/DataContext';
 
 const fundPerformance = [
   { name: 'Blackwater Alpha Fund', nav: 125.50, dailyChange: 0.8, monthlyReturn: 3.2, ytdReturn: 12.5 },
@@ -170,6 +59,7 @@ const fundPerformance = [
 ];
 
 const InvestorPortalPage = () => {
+  const { investors } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
@@ -428,6 +318,11 @@ const InvestorPortalPage = () => {
                   <SelectItem value="individual">Individual</SelectItem>
                   <SelectItem value="institutional">Institutional</SelectItem>
                   <SelectItem value="family_office">Family Office</SelectItem>
+                  <SelectItem value="hnwi">High-Net-Worth Individual (HNWI)</SelectItem>
+                  <SelectItem value="uhnwi">Ultra-High-Net-Worth Individual (UHNWI)</SelectItem>
+                  <SelectItem value="founder_entrepreneur">Founder & Entrepreneur</SelectItem>
+                  <SelectItem value="corporate">Corporate Client</SelectItem>
+                  <SelectItem value="institutional_investor">Institutional Investor</SelectItem>
                 </SelectContent>
               </Select>
             </div>

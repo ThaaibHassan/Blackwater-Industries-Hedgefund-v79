@@ -4,14 +4,14 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getFunctions } from 'firebase/functions';
 
-// Firebase configuration from environment variables
+// Replace the values below with your actual config from Firebase Console > Project settings > General > Your apps > Firebase SDK snippet > Config
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyA-7BXZuUs7kbwldRYSvDUg8Afuh29mtoI",
+  authDomain: "blackwater-hedgefund.firebaseapp.com",
+  projectId: "blackwater-hedgefund",
+  storageBucket: "blackwater-hedgefund.appspot.com",
+  messagingSenderId: "644835120177", // Find this in your Firebase config
+  appId: "1:644835120177:web:afb27906803fc8bcf67110", // Find this in your Firebase config
 };
 
 // Initialize Firebase

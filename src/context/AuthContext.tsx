@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { 
   User as FirebaseUser, 
   signInWithEmailAndPassword, 
@@ -10,8 +10,7 @@ import {
   getAuth
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
-import { initializeApp, deleteApp } from 'firebase/app';
+import app, { db } from "@/lib/firebase";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { User, UserRole, Permission } from '@/types';
 
@@ -96,11 +95,14 @@ const mockUser: User = {
   twoFactorEnabled: false,
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [useMockAuth, setUseMockAuth] = useState(false);
+  const [lastActivity, setLastActivity] = useState(Date.now());
+
+  const auth = getAuth(app);
 
   // Mock authentication functions
   const mockSignIn = async (email: string) => {
@@ -154,7 +156,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         photoURL: firebaseUser.photoURL || undefined,
       };
     } else {
-      // Create user document if it doesn't exist
+      // Create user document
       const newUser: User = {
         uid: firebaseUser.uid,
         email: firebaseUser.email || '',
@@ -165,15 +167,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         lastLoginAt: new Date(),
         isActive: true,
         twoFactorEnabled: false,
-        photoURL: firebaseUser.photoURL || undefined,
       };
-      
-      await setDoc(doc(db, 'users', firebaseUser.uid), {
-        ...newUser,
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
-      });
-      
+      if (firebaseUser.photoURL) {
+        (newUser as any).photoURL = firebaseUser.photoURL;
+      }
+      const userDoc = (newUser as any).photoURL ? newUser : { ...newUser };
+      await setDoc(doc(db, 'users', firebaseUser.uid), userDoc);
       return newUser;
     }
   };
@@ -226,8 +225,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (userCredential.user.photoURL) {
         newUser.photoURL = userCredential.user.photoURL;
       }
-      
-      await setDoc(doc(db, 'users', userCredential.user.uid), newUser);
+      // Only include photoURL if defined
+      const userDoc = newUser.photoURL ? newUser : { ...newUser };
+      await setDoc(doc(db, 'users', userCredential.user.uid), userDoc);
       setUser(newUser as User);
     } catch (error) {
       console.error('Sign up error:', error);
@@ -301,14 +301,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         lastLoginAt: new Date(),
         isActive: true,
         twoFactorEnabled: false,
-        photoURL: result.user.photoURL || undefined,
       };
-
-      await setDoc(doc(db, 'users', result.user.uid), {
-        ...newUser,
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
-      });
+      if (result.user.photoURL) {
+        (newUser as any).photoURL = result.user.photoURL;
+      }
+      // Only include photoURL if defined
+      const userDoc = (newUser as any).photoURL ? newUser : { ...newUser };
+      await setDoc(doc(db, 'users', result.user.uid), userDoc);
     } catch (error) {
       console.error('Create user error:', error);
       throw error;
@@ -403,6 +402,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  // Session timeout: auto-logout after 1 hour of inactivity
+  useEffect(() => {
+    if (!user) return;
+
+    const handleActivity = () => setLastActivity(Date.now());
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+
+    const interval = setInterval(() => {
+      if (Date.now() - lastActivity > 60 * 60 * 1000) { // 1 hour
+        logout();
+      }
+    }, 60 * 1000); // check every minute
+
+    return () => {
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line
+  }, [user, lastActivity]);
 
   const value = {
     user,

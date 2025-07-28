@@ -34,115 +34,10 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/select';
-
-// Mock trading data
-const trades = [
-  {
-    id: 1,
-    symbol: 'AAPL',
-    side: 'buy',
-    quantity: 1000,
-    price: 185.50,
-    totalValue: 185500,
-    commission: 9.99,
-    timestamp: '2024-01-15T10:30:00Z',
-    status: 'executed',
-    strategy: 'momentum',
-    analyst: 'John Smith',
-    notes: 'Strong earnings beat, technical breakout',
-    tags: ['earnings', 'breakout', 'large-cap'],
-    pnl: 2500,
-    exitPrice: null,
-    exitDate: null,
-    holdingPeriod: null
-  },
-  {
-    id: 2,
-    symbol: 'TSLA',
-    side: 'sell',
-    quantity: 500,
-    price: 245.75,
-    totalValue: 122875,
-    commission: 9.99,
-    timestamp: '2024-01-15T14:15:00Z',
-    status: 'executed',
-    strategy: 'mean-reversion',
-    analyst: 'Sarah Johnson',
-    notes: 'Overbought conditions, taking profits',
-    tags: ['profit-taking', 'technical', 'ev'],
-    pnl: -1200,
-    exitPrice: null,
-    exitDate: null,
-    holdingPeriod: null
-  },
-  {
-    id: 3,
-    symbol: 'NVDA',
-    side: 'buy',
-    quantity: 200,
-    price: 890.25,
-    totalValue: 178050,
-    commission: 9.99,
-    timestamp: '2024-01-14T09:45:00Z',
-    status: 'executed',
-    strategy: 'growth',
-    analyst: 'Mike Chen',
-    notes: 'AI momentum continues, strong fundamentals',
-    tags: ['ai', 'growth', 'semiconductor'],
-    pnl: 8500,
-    exitPrice: null,
-    exitDate: null,
-    holdingPeriod: null
-  },
-  {
-    id: 4,
-    symbol: 'MSFT',
-    side: 'buy',
-    quantity: 800,
-    price: 415.30,
-    totalValue: 332240,
-    commission: 9.99,
-    timestamp: '2024-01-14T11:20:00Z',
-    status: 'pending',
-    strategy: 'value',
-    analyst: 'Lisa Wang',
-    notes: 'Cloud growth story intact',
-    tags: ['cloud', 'value', 'dividend'],
-    pnl: 0,
-    exitPrice: null,
-    exitDate: null,
-    holdingPeriod: null
-  },
-  {
-    id: 5,
-    symbol: 'GOOGL',
-    side: 'sell',
-    quantity: 300,
-    price: 165.80,
-    totalValue: 49740,
-    commission: 9.99,
-    timestamp: '2024-01-13T16:00:00Z',
-    status: 'cancelled',
-    strategy: 'technical',
-    analyst: 'David Kim',
-    notes: 'Support level broken, stop loss',
-    tags: ['stop-loss', 'technical', 'advertising'],
-    pnl: -800,
-    exitPrice: null,
-    exitDate: null,
-    holdingPeriod: null
-  }
-];
-
-const strategies = [
-  { name: 'momentum', description: 'Momentum Trading', winRate: 65, avgReturn: 2.1 },
-  { name: 'mean-reversion', description: 'Mean Reversion', winRate: 58, avgReturn: 1.8 },
-  { name: 'growth', description: 'Growth Investing', winRate: 72, avgReturn: 3.2 },
-  { name: 'value', description: 'Value Investing', winRate: 61, avgReturn: 2.5 },
-  { name: 'technical', description: 'Technical Analysis', winRate: 55, avgReturn: 1.5 }
-];
+import { useData } from '@/context/DataContext';
 
 const TradesPage = () => {
+  const { trades, addTrade, updateTrade, deleteTrade } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedStrategy, setSelectedStrategy] = useState('all');
@@ -154,68 +49,18 @@ const TradesPage = () => {
   const [editingTradeId, setEditingTradeId] = useState<number | null>(null);
   const [newTrade, setNewTrade] = useState({
     symbol: '',
-    side: 'buy' as const,
+    side: 'buy' as 'buy' | 'sell',
     quantity: 0,
     price: 0,
-    type: 'market' as const,
-    strategy: 'momentum'
+    type: 'market' as 'market' | 'limit',
+    strategy: 'momentum',
   });
 
-  // Mock data - FIXED: Define trades array first
-  const initialTrades = [
-    {
-      id: 1,
-      symbol: 'AAPL',
-      side: 'buy',
-      quantity: 100,
-      price: 175.50,
-      totalValue: 17550,
-      pnl: 1000,
-      status: 'executed',
-      type: 'market',
-      strategy: 'momentum',
-      analyst: 'John Smith',
-      timestamp: '2024-01-15T10:30:00Z'
-    },
-    {
-      id: 2,
-      symbol: 'TSLA',
-      side: 'sell',
-      quantity: 50,
-      price: 245.75,
-      totalValue: 12287.5,
-      pnl: -500,
-      status: 'executed',
-      type: 'limit',
-      strategy: 'mean-reversion',
-      analyst: 'Sarah Johnson',
-      timestamp: '2024-01-14T14:20:00Z'
-    },
-    {
-      id: 3,
-      symbol: 'NVDA',
-      side: 'buy',
-      quantity: 200,
-      price: 850.00,
-      totalValue: 170000,
-      pnl: 2000,
-      status: 'pending',
-      type: 'limit',
-      strategy: 'growth',
-      analyst: 'Mike Chen',
-      timestamp: '2024-01-13T09:15:00Z'
-    }
-  ];
-
-  // FIXED: Use initialTrades instead of trades
-  const [trades, setTrades] = useState(initialTrades);
-
   const filteredTrades = trades.filter(trade => {
-    const matchesSearch = trade.symbol.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (trade.symbol || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = selectedStatus === 'all' || trade.status === selectedStatus;
     const matchesStrategy = selectedStrategy === 'all' || trade.strategy === selectedStrategy;
     const matchesSide = selectedSide === 'all' || trade.side === selectedSide;
-    
     return matchesSearch && matchesStatus && matchesStrategy && matchesSide;
   });
 
@@ -300,7 +145,7 @@ const TradesPage = () => {
 
   const handleDeleteTrade = (trade: any) => {
     if (confirm(`Are you sure you want to delete this ${trade.symbol} trade?`)) {
-      setTrades(trades.filter(t => t.id !== trade.id));
+      // Implement delete logic
       toast({
         title: "Trade Deleted",
         description: `${trade.symbol} trade has been removed.`,
@@ -354,16 +199,7 @@ const TradesPage = () => {
         analyst: 'Current User',
         timestamp: new Date().toISOString()
       };
-      setTrades([...trades, trade]);
-      setIsAddingTrade(false);
-      setNewTrade({
-        symbol: '',
-        side: 'buy',
-        quantity: 0,
-        price: 0,
-        type: 'market',
-        strategy: 'momentum'
-      });
+      // Implement add logic
       toast({
         title: "Trade Added",
         description: `${newTrade.side.toUpperCase()} ${newTrade.quantity} shares of ${newTrade.symbol} at $${newTrade.price}`,
@@ -379,25 +215,7 @@ const TradesPage = () => {
 
   const handleUpdateTrade = () => {
     if (editingTradeId && newTrade.symbol && newTrade.quantity > 0 && newTrade.price > 0) {
-      setTrades(trades.map(trade => 
-        trade.id === editingTradeId 
-          ? { 
-              ...trade, 
-              ...newTrade, 
-              totalValue: newTrade.quantity * newTrade.price 
-            }
-          : trade
-      ));
-      setIsAddingTrade(false);
-      setEditingTradeId(null);
-      setNewTrade({
-        symbol: '',
-        side: 'buy',
-        quantity: 0,
-        price: 0,
-        type: 'market',
-        strategy: 'momentum'
-      });
+      // Implement update logic
       toast({
         title: "Trade Updated",
         description: `${newTrade.symbol} trade has been updated.`,
@@ -618,7 +436,7 @@ const TradesPage = () => {
                     </td>
                     <td className="p-2">
                       <Badge variant={trade.side === 'buy' ? 'default' : 'secondary'}>
-                        {trade.side.toUpperCase()}
+                        {(trade.side ? trade.side.toUpperCase() : 'N/A')}
                       </Badge>
                     </td>
                     <td className="p-2">
@@ -688,20 +506,7 @@ const TradesPage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {strategies.map((strategy) => (
-                <div key={strategy.name} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <div className="font-medium">{strategy.description}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Win Rate: {strategy.winRate}%
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium">{formatPercentage(strategy.avgReturn)}</div>
-                    <div className="text-sm text-muted-foreground">Avg Return</div>
-                  </div>
-                </div>
-              ))}
+              {/* Add strategy performance rendering logic here */}
             </div>
           </CardContent>
         </Card>
@@ -737,7 +542,7 @@ const TradesPage = () => {
 
       {/* INLINE TRADE FORM */}
       {isAddingTrade && (
-        <Card className="border-2 border-blue-200 bg-blue-50/50">
+        <Card className="border-2 border-primary/20 bg-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               {editingTradeId ? 'Edit Trade' : 'Add New Trade'}

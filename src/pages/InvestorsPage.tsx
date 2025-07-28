@@ -38,8 +38,11 @@ import {
   Trash2,
   Eye,
   X,
-  Save
+  Save,
+  Target,
+  AlertTriangle
 } from 'lucide-react';
+import { useData } from '@/context/DataContext';
 
 const InvestorsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,7 +52,7 @@ const InvestorsPage = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddingInvestor, setIsAddingInvestor] = useState(false);
-  const [editingInvestorId, setEditingInvestorId] = useState<number | null>(null);
+  const [editingInvestorId, setEditingInvestorId] = useState<string | null>(null);
   const [newInvestor, setNewInvestor] = useState({
     name: '',
     email: '',
@@ -59,107 +62,17 @@ const InvestorsPage = () => {
     assignedManager: ''
   });
   const { toast } = useToast();
-
-  // Mock investor data
-  const investors = [
-    {
-      id: 1,
-      name: 'John Smith',
-      email: 'john.smith@email.com',
-      phone: '+1 (555) 123-4567',
-      type: 'individual',
-      status: 'active',
-      totalCommitment: 2500000,
-      currentBalance: 2750000,
-      kycStatus: 'approved',
-      assignedManager: 'Sarah Johnson',
-      lastContact: '2024-01-15'
-    },
-    {
-      id: 2,
-      name: 'Acme Corporation',
-      email: 'investor@acme.com',
-      phone: '+1 (555) 234-5678',
-      type: 'institutional',
-      status: 'active',
-      totalCommitment: 5000000,
-      currentBalance: 5450000,
-      kycStatus: 'approved',
-      assignedManager: 'Mike Chen',
-      lastContact: '2024-01-14'
-    },
-    {
-      id: 3,
-      name: 'Family Office LLC',
-      email: 'contact@familyoffice.com',
-      phone: '+1 (555) 345-6789',
-      type: 'family_office',
-      status: 'active',
-      totalCommitment: 10000000,
-      currentBalance: 11200000,
-      kycStatus: 'approved',
-      assignedManager: 'Lisa Wang',
-      lastContact: '2024-01-13'
-    },
-    {
-      id: 4,
-      name: 'Retirement Fund',
-      email: 'admin@retirementfund.com',
-      phone: '+1 (555) 456-7890',
-      type: 'institutional',
-      status: 'pending',
-      totalCommitment: 3000000,
-      currentBalance: 0,
-      kycStatus: 'pending',
-      assignedManager: 'David Kim',
-      lastContact: '2024-01-12'
-    }
-  ];
-
-  const pipeline = [
-    {
-      id: 1,
-      investorName: 'Tech Startup Fund',
-      assignedManager: 'John Smith',
-      targetCommitment: 2000000,
-      probability: 75,
-      expectedCloseDate: '2024-02-15',
-      stage: 'due_diligence',
-      lastActivity: '2024-01-15'
-    },
-    {
-      id: 2,
-      investorName: 'University Endowment',
-      assignedManager: 'Sarah Johnson',
-      targetCommitment: 5000000,
-      probability: 60,
-      expectedCloseDate: '2024-03-01',
-      stage: 'negotiation',
-      lastActivity: '2024-01-14'
-    },
-    {
-      id: 3,
-      investorName: 'Private Equity Firm',
-      assignedManager: 'Mike Chen',
-      targetCommitment: 8000000,
-      probability: 40,
-      expectedCloseDate: '2024-04-01',
-      stage: 'initial_contact',
-      lastActivity: '2024-01-13'
-    }
-  ];
+  const { investors, addInvestor, updateInvestor, deleteInvestor } = useData();
 
   const filteredInvestors = investors.filter(investor => {
-    const matchesSearch = investor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         investor.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (investor.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (investor.email || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === 'all' || investor.type === selectedType;
     return matchesSearch && matchesType;
   });
 
   const totalCommitments = investors.reduce((sum, inv) => sum + inv.totalCommitment, 0);
   const activeInvestors = investors.filter(inv => inv.status === 'active').length;
-  const prospects = investors.filter(inv => inv.status === 'prospect').length;
-  const pipelineValue = pipeline.reduce((sum, p) => sum + p.targetCommitment, 0);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -275,7 +188,7 @@ const InvestorsPage = () => {
       totalCommitment: investor.totalCommitment,
       assignedManager: investor.assignedManager
     });
-    setEditingInvestorId(investor.id);
+    setEditingInvestorId(investor.id.toString());
     setIsAddingInvestor(true);
   };
 
@@ -335,7 +248,7 @@ const InvestorsPage = () => {
 
       {/* INLINE INVESTOR FORM */}
       {isAddingInvestor && (
-        <Card className="border-2 border-blue-200 bg-blue-50/50">
+        <Card className="border-2 border-primary/20 bg-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               {editingInvestorId ? 'Edit Investor' : 'Add New Investor'}
@@ -391,6 +304,11 @@ const InvestorsPage = () => {
                       <SelectItem value="individual">Individual</SelectItem>
                       <SelectItem value="institutional">Institutional</SelectItem>
                       <SelectItem value="family_office">Family Office</SelectItem>
+                      <SelectItem value="hnwi">High-Net-Worth Individual (HNWI)</SelectItem>
+                      <SelectItem value="uhnwi">Ultra-High-Net-Worth Individual (UHNWI)</SelectItem>
+                      <SelectItem value="founder_entrepreneur">Founder & Entrepreneur</SelectItem>
+                      <SelectItem value="corporate">Corporate Client</SelectItem>
+                      <SelectItem value="institutional_investor">Institutional Investor</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -462,26 +380,30 @@ const InvestorsPage = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Prospects</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Allocated Funds</CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{prospects}</div>
+            <div className="text-2xl font-bold">
+              ${(investors.reduce((sum, inv) => sum + (inv.allocatedAmount || 0), 0) / 1000000).toFixed(1)}M
+            </div>
             <p className="text-xs text-muted-foreground">
-              In pipeline
+              In active investments
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pipeline Value</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Unallocated Funds</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(pipelineValue / 1000000).toFixed(1)}M</div>
+            <div className="text-2xl font-bold text-orange-600">
+              ${(investors.reduce((sum, inv) => sum + (inv.unallocatedAmount || 0), 0) / 1000000).toFixed(1)}M
+            </div>
             <p className="text-xs text-muted-foreground">
-              Potential commitments
+              Pending allocation
             </p>
           </CardContent>
         </Card>
@@ -514,7 +436,11 @@ const InvestorsPage = () => {
                   <SelectItem value="individual">Individual</SelectItem>
                   <SelectItem value="institutional">Institutional</SelectItem>
                   <SelectItem value="family_office">Family Office</SelectItem>
-                  <SelectItem value="fund_of_funds">Fund of Funds</SelectItem>
+                  <SelectItem value="hnwi">High-Net-Worth Individual (HNWI)</SelectItem>
+                  <SelectItem value="uhnwi">Ultra-High-Net-Worth Individual (UHNWI)</SelectItem>
+                  <SelectItem value="founder_entrepreneur">Founder & Entrepreneur</SelectItem>
+                  <SelectItem value="corporate">Corporate Client</SelectItem>
+                  <SelectItem value="institutional_investor">Institutional Investor</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -545,6 +471,14 @@ const InvestorsPage = () => {
                   <div className="text-right">
                     <div className="font-medium">${(investor.currentBalance / 1000000).toFixed(1)}M</div>
                     <div className="text-sm text-muted-foreground">Current Balance</div>
+                    <div className="text-xs text-muted-foreground">
+                      ${(investor.allocatedAmount / 1000000).toFixed(1)}M allocated
+                    </div>
+                    {investor.unallocatedAmount > 0 && (
+                      <div className="text-xs text-orange-600">
+                        ${(investor.unallocatedAmount / 1000000).toFixed(1)}M unallocated
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex items-center space-x-2">
@@ -615,7 +549,7 @@ const InvestorsPage = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {pipeline.map((deal) => (
+            {investors.map((deal: any) => (
               <div key={deal.id} className="border rounded-lg p-4 hover:bg-muted/50">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
@@ -631,8 +565,8 @@ const InvestorsPage = () => {
                   </div>
                   
                   <div className="text-right">
-                    <div className="font-medium">${(deal.targetCommitment / 1000000).toFixed(1)}M</div>
-                    <div className="text-sm text-muted-foreground">Target</div>
+                    <div className="font-medium">${(deal.totalCommitment / 1000000).toFixed(1)}M</div>
+                    <div className="text-sm text-muted-foreground">Total Commitment</div>
                   </div>
                   
                   <div className="text-right">
@@ -646,9 +580,13 @@ const InvestorsPage = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 rounded text-xs ${getStageColor(deal.stage)}`}>
-                      {deal.stage.replace('_', ' ')}
-                    </span>
+                    {deal.stage ? (
+                      <span className={`px-2 py-1 rounded text-xs ${getStageColor(deal.stage)}`}>
+                        {deal.stage.replace('_', ' ')}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-1 rounded text-xs bg-muted text-muted-foreground">N/A</span>
+                    )}
                     <Button 
                       variant="ghost" 
                       size="sm"

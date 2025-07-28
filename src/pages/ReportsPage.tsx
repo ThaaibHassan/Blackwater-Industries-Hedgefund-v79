@@ -44,6 +44,7 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/select';
+import { useData } from '@/context/DataContext';
 
 // Mock reports data
 const reports = [
@@ -188,11 +189,16 @@ const ReportsPage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'generated': return 'bg-green-100 text-green-800';
-      case 'scheduled': return 'bg-blue-100 text-blue-800';
-      case 'in_progress': return 'bg-yellow-100 text-yellow-800';
-      case 'failed': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'in_progress':
+        return 'bg-primary/10 text-primary';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'scheduled':
+        return 'bg-primary/10 text-primary';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 

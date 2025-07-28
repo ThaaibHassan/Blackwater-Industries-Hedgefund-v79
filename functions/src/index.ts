@@ -7,8 +7,11 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import * as functions from "firebase-functions/v1";
+import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import { getQuote } from './services/yahooService';
 
 admin.initializeApp();
 
@@ -215,3 +218,22 @@ export const seedDashboardData = functions.https.onCall(async (data, context) =>
 
   return { message: 'Dashboard mock data seeded.' };
 });
+
+const app = express();
+app.use(cors({ origin: true }));
+
+app.get('/api/market/quote', async (req: Request, res: Response) => {
+  const symbol = req.query.symbol as string;
+  if (!symbol) {
+    return res.status(400).json({ error: 'Missing symbol parameter' });
+  }
+  try {
+    const quote = await getQuote(symbol);
+    if (!quote) return res.status(404).json({ error: 'Symbol not found' });
+    return res.json(quote);
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch quote', details: err?.toString() });
+  }
+});
+
+export const api = functions.https.onRequest(app);

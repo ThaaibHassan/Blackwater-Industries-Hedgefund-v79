@@ -2,35 +2,1901 @@
   {
     "id": "investor_001",
     "fields": {
-      "name": "Acme Capital",
-      "email": "contact@acmecapital.com",
-      "type": "institutional",
+      "name": "John Smith",
+      "email": "johnsmith@private.com",
+      "type": "individual",
       "status": "active",
-      "totalCommitment": 5000000,
-      "currentBalance": 4800000,
-      "inceptionDate": "2022-02-01T00:00:00.000Z",
+      "totalCommitment": 425167,
+      "currentBalance": 462554,
+      "allocatedAmount": 360587,
+      "unallocatedAmount": 101967,
+      "inceptionDate": "2022-12-26T19:00:00.000Z",
       "kycStatus": "approved",
       "documents": [],
-      "assignedManager": "Bob Manager",
-      "createdAt": "2022-02-01T00:00:00.000Z",
+      "assignedManager": "David Chen",
+      "createdAt": "2022-02-15T19:00:00.000Z",
       "updatedAt": "2024-06-01T00:00:00.000Z"
     }
   },
   {
     "id": "investor_002",
     "fields": {
-      "name": "Jane Smith",
-      "email": "jane.smith@private.com",
+      "name": "Sarah Johnson",
+      "email": "sarahjohnson@private.com",
       "type": "individual",
-      "status": "qualified",
-      "totalCommitment": 1000000,
-      "currentBalance": 950000,
-      "inceptionDate": "2023-01-10T00:00:00.000Z",
+      "status": "active",
+      "totalCommitment": 404656,
+      "currentBalance": 407248,
+      "allocatedAmount": 348355,
+      "unallocatedAmount": 58894,
+      "inceptionDate": "2023-04-09T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2023-06-13T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_003",
+    "fields": {
+      "name": "Michael Brown",
+      "email": "michaelbrown@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 133242,
+      "currentBalance": 130222,
+      "allocatedAmount": 132842,
+      "unallocatedAmount": -2620,
+      "inceptionDate": "2022-04-15T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Michael Brown",
+      "createdAt": "2022-07-07T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_004",
+    "fields": {
+      "name": "Emily Davis",
+      "email": "emilydavis@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 499079,
+      "currentBalance": 459404,
+      "allocatedAmount": 429934,
+      "unallocatedAmount": 29470,
+      "inceptionDate": "2022-01-09T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2021-07-15T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_005",
+    "fields": {
+      "name": "David Wilson",
+      "email": "davidwilson@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 198344,
+      "currentBalance": 206650,
+      "allocatedAmount": 147628,
+      "unallocatedAmount": 59021,
+      "inceptionDate": "2023-01-11T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2020-02-12T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_006",
+    "fields": {
+      "name": "Lisa Anderson",
+      "email": "lisaanderson@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 368046,
+      "currentBalance": 402581,
+      "allocatedAmount": 276874,
+      "unallocatedAmount": 125707,
+      "inceptionDate": "2022-02-14T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2020-06-11T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_007",
+    "fields": {
+      "name": "Robert Taylor",
+      "email": "roberttaylor@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 192915,
+      "currentBalance": 195578,
+      "allocatedAmount": 160769,
+      "unallocatedAmount": 34809,
+      "inceptionDate": "2020-11-17T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2020-02-17T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_008",
+    "fields": {
+      "name": "Jennifer Martinez",
+      "email": "jennifermartinez@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 476480,
+      "currentBalance": 463618,
+      "allocatedAmount": 432512,
+      "unallocatedAmount": 31106,
+      "inceptionDate": "2020-04-16T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2023-08-15T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_009",
+    "fields": {
+      "name": "William Garcia",
+      "email": "williamgarcia@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 210337,
+      "currentBalance": 224971,
+      "allocatedAmount": 163942,
+      "unallocatedAmount": 61028,
+      "inceptionDate": "2022-10-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2020-03-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_010",
+    "fields": {
+      "name": "Amanda Rodriguez",
+      "email": "amandarodriguez@private.com",
+      "type": "individual",
+      "status": "pending",
+      "totalCommitment": 370939,
+      "currentBalance": 376140,
+      "allocatedAmount": 300310,
+      "unallocatedAmount": 75830,
+      "inceptionDate": "2022-02-09T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2022-09-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_011",
+    "fields": {
+      "name": "Christopher Lee",
+      "email": "christopherlee@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 179354,
+      "currentBalance": 186626,
+      "allocatedAmount": 146571,
+      "unallocatedAmount": 40055,
+      "inceptionDate": "2023-01-25T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Sarah Wilson",
+      "createdAt": "2022-12-31T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_012",
+    "fields": {
+      "name": "Michelle White",
+      "email": "michellewhite@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 474186,
+      "currentBalance": 441232,
+      "allocatedAmount": 452324,
+      "unallocatedAmount": -11093,
+      "inceptionDate": "2023-06-08T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2023-10-13T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_013",
+    "fields": {
+      "name": "Daniel Clark",
+      "email": "danielclark@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 110594,
+      "currentBalance": 109725,
+      "allocatedAmount": 105297,
+      "unallocatedAmount": 4428,
+      "inceptionDate": "2020-07-02T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2022-08-08T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_014",
+    "fields": {
+      "name": "Jessica Lewis",
+      "email": "jessicalewis@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 241366,
+      "currentBalance": 224885,
+      "allocatedAmount": 210939,
+      "unallocatedAmount": 13946,
+      "inceptionDate": "2022-04-10T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Matthew Anderson",
+      "createdAt": "2021-09-18T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_015",
+    "fields": {
+      "name": "Matthew Hall",
+      "email": "matthewhall@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 438053,
+      "currentBalance": 431952,
+      "allocatedAmount": 335493,
+      "unallocatedAmount": 96459,
+      "inceptionDate": "2020-09-08T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2021-01-05T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_016",
+    "fields": {
+      "name": "Ashley Young",
+      "email": "ashleyyoung@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 301529,
+      "currentBalance": 314466,
+      "allocatedAmount": 263755,
+      "unallocatedAmount": 50711,
+      "inceptionDate": "2020-09-10T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Sarah Wilson",
+      "createdAt": "2020-06-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_017",
+    "fields": {
+      "name": "Andrew King",
+      "email": "andrewking@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 383997,
+      "currentBalance": 414063,
+      "allocatedAmount": 375303,
+      "unallocatedAmount": 38760,
+      "inceptionDate": "2020-07-15T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2022-10-18T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_018",
+    "fields": {
+      "name": "Stephanie Wright",
+      "email": "stephaniewright@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 295895,
+      "currentBalance": 322298,
+      "allocatedAmount": 229194,
+      "unallocatedAmount": 93104,
+      "inceptionDate": "2021-03-24T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2021-05-26T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_019",
+    "fields": {
+      "name": "Joshua Green",
+      "email": "joshuagreen@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 224198,
+      "currentBalance": 203233,
+      "allocatedAmount": 208785,
+      "unallocatedAmount": -5553,
+      "inceptionDate": "2020-02-05T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2021-01-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_020",
+    "fields": {
+      "name": "Nicole Baker",
+      "email": "nicolebaker@private.com",
+      "type": "individual",
+      "status": "active",
+      "totalCommitment": 459394,
+      "currentBalance": 446621,
+      "allocatedAmount": 332940,
+      "unallocatedAmount": 113681,
+      "inceptionDate": "2020-01-01T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Christopher White",
+      "createdAt": "2023-11-19T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_021",
+    "fields": {
+      "name": "Richard Thompson",
+      "email": "richardthompson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1724496,
+      "currentBalance": 1670066,
+      "allocatedAmount": 1515991,
+      "unallocatedAmount": 154075,
+      "inceptionDate": "2021-06-25T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2021-03-13T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_022",
+    "fields": {
+      "name": "Patricia Moore",
+      "email": "patriciamoore@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2394701,
+      "currentBalance": 2363077,
+      "allocatedAmount": 1933357,
+      "unallocatedAmount": 429720,
+      "inceptionDate": "2022-09-29T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2020-11-08T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_023",
+    "fields": {
+      "name": "Thomas Jackson",
+      "email": "thomasjackson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1559774,
+      "currentBalance": 1591963,
+      "allocatedAmount": 1505519,
+      "unallocatedAmount": 86444,
+      "inceptionDate": "2021-01-07T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2022-12-13T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_024",
+    "fields": {
+      "name": "Barbara Martin",
+      "email": "barbaramartin@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 3212503,
+      "currentBalance": 3519270,
+      "allocatedAmount": 2402841,
+      "unallocatedAmount": 1116429,
+      "inceptionDate": "2023-03-30T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2020-01-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_025",
+    "fields": {
+      "name": "Steven Lee",
+      "email": "stevenlee@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1615951,
+      "currentBalance": 1482263,
+      "allocatedAmount": 1145491,
+      "unallocatedAmount": 336772,
+      "inceptionDate": "2022-04-25T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2022-05-31T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_026",
+    "fields": {
+      "name": "Linda Garcia",
+      "email": "lindagarcia@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1117470,
+      "currentBalance": 1027070,
+      "allocatedAmount": 826606,
+      "unallocatedAmount": 200464,
+      "inceptionDate": "2023-04-23T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2023-04-14T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_027",
+    "fields": {
+      "name": "Kenneth Rodriguez",
+      "email": "kennethrodriguez@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 3888805,
+      "currentBalance": 3569944,
+      "allocatedAmount": 3613029,
+      "unallocatedAmount": -43085,
+      "inceptionDate": "2022-01-13T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2023-12-22T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_028",
+    "fields": {
+      "name": "Elizabeth White",
+      "email": "elizabethwhite@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2103000,
+      "currentBalance": 1909473,
+      "allocatedAmount": 1975698,
+      "unallocatedAmount": -66225,
+      "inceptionDate": "2022-01-12T19:00:00.000Z",
       "kycStatus": "pending",
       "documents": [],
       "assignedManager": "Bob Manager",
-      "createdAt": "2023-01-10T00:00:00.000Z",
+      "createdAt": "2022-02-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_029",
+    "fields": {
+      "name": "Edward Johnson",
+      "email": "edwardjohnson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 4060277,
+      "currentBalance": 4018959,
+      "allocatedAmount": 3474314,
+      "unallocatedAmount": 544645,
+      "inceptionDate": "2020-04-04T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2021-03-23T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_030",
+    "fields": {
+      "name": "Jennifer Brown",
+      "email": "jenniferbrown@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2441666,
+      "currentBalance": 2208070,
+      "allocatedAmount": 2315563,
+      "unallocatedAmount": -107493,
+      "inceptionDate": "2022-07-14T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2022-11-08T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_031",
+    "fields": {
+      "name": "Brian Davis",
+      "email": "briandavis@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2393071,
+      "currentBalance": 2235127,
+      "allocatedAmount": 1834333,
+      "unallocatedAmount": 400794,
+      "inceptionDate": "2020-07-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2021-07-02T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_032",
+    "fields": {
+      "name": "Nancy Miller",
+      "email": "nancymiller@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2016376,
+      "currentBalance": 2107553,
+      "allocatedAmount": 1543760,
+      "unallocatedAmount": 563793,
+      "inceptionDate": "2020-07-15T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2020-09-12T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_033",
+    "fields": {
+      "name": "Ronald Wilson",
+      "email": "ronaldwilson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2476340,
+      "currentBalance": 2379781,
+      "allocatedAmount": 2110837,
+      "unallocatedAmount": 268944,
+      "inceptionDate": "2023-04-23T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2022-07-03T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_034",
+    "fields": {
+      "name": "Helen Anderson",
+      "email": "helenanderson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 4443155,
+      "currentBalance": 4499827,
+      "allocatedAmount": 3297842,
+      "unallocatedAmount": 1201984,
+      "inceptionDate": "2023-07-23T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2021-06-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_035",
+    "fields": {
+      "name": "Anthony Taylor",
+      "email": "anthonytaylor@private.com",
+      "type": "hnwi",
+      "status": "pending",
+      "totalCommitment": 1295206,
+      "currentBalance": 1210058,
+      "allocatedAmount": 1065566,
+      "unallocatedAmount": 144491,
+      "inceptionDate": "2021-06-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2023-06-18T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_036",
+    "fields": {
+      "name": "Sandra Thomas",
+      "email": "sandrathomas@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1515506,
+      "currentBalance": 1543647,
+      "allocatedAmount": 1184542,
+      "unallocatedAmount": 359105,
+      "inceptionDate": "2023-11-22T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2021-08-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_037",
+    "fields": {
+      "name": "Kevin Jackson",
+      "email": "kevinjackson@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 1077027,
+      "currentBalance": 1049190,
+      "allocatedAmount": 904260,
+      "unallocatedAmount": 144930,
+      "inceptionDate": "2022-04-13T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2023-05-30T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_038",
+    "fields": {
+      "name": "Donna White",
+      "email": "donnawhite@private.com",
+      "type": "hnwi",
+      "status": "pending",
+      "totalCommitment": 1726770,
+      "currentBalance": 1826421,
+      "allocatedAmount": 1438709,
+      "unallocatedAmount": 387712,
+      "inceptionDate": "2020-04-25T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "David Chen",
+      "createdAt": "2023-07-09T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_039",
+    "fields": {
+      "name": "Jason Martin",
+      "email": "jasonmartin@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 4724686,
+      "currentBalance": 4483742,
+      "allocatedAmount": 4118467,
+      "unallocatedAmount": 365275,
+      "inceptionDate": "2022-12-19T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2022-03-16T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_040",
+    "fields": {
+      "name": "Carol Garcia",
+      "email": "carolgarcia@private.com",
+      "type": "hnwi",
+      "status": "pending",
+      "totalCommitment": 3843026,
+      "currentBalance": 3814152,
+      "allocatedAmount": 3803592,
+      "unallocatedAmount": 10560,
+      "inceptionDate": "2022-01-03T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2021-06-01T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_041",
+    "fields": {
+      "name": "Eric Rodriguez",
+      "email": "ericrodriguez@private.com",
+      "type": "hnwi",
+      "status": "pending",
+      "totalCommitment": 2393127,
+      "currentBalance": 2367503,
+      "allocatedAmount": 2316426,
+      "unallocatedAmount": 51077,
+      "inceptionDate": "2021-07-21T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2022-09-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_042",
+    "fields": {
+      "name": "Ruth Lee",
+      "email": "ruthlee@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 2130632,
+      "currentBalance": 1961127,
+      "allocatedAmount": 1711122,
+      "unallocatedAmount": 250005,
+      "inceptionDate": "2023-09-07T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2023-07-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_043",
+    "fields": {
+      "name": "Timothy Clark",
+      "email": "timothyclark@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 4746803,
+      "currentBalance": 4721960,
+      "allocatedAmount": 3946364,
+      "unallocatedAmount": 775596,
+      "inceptionDate": "2020-04-11T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Christopher White",
+      "createdAt": "2022-09-29T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_044",
+    "fields": {
+      "name": "Julie Lewis",
+      "email": "julielewis@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 3295144,
+      "currentBalance": 3331419,
+      "allocatedAmount": 3153859,
+      "unallocatedAmount": 177560,
+      "inceptionDate": "2022-01-30T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2023-04-26T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_045",
+    "fields": {
+      "name": "Mark Hall",
+      "email": "markhall@private.com",
+      "type": "hnwi",
+      "status": "active",
+      "totalCommitment": 4026159,
+      "currentBalance": 3725874,
+      "allocatedAmount": 3125589,
+      "unallocatedAmount": 600284,
+      "inceptionDate": "2021-08-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2022-07-26T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_046",
+    "fields": {
+      "name": "Alexander Vanderbilt",
+      "email": "alexandervanderbilt@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 28438210,
+      "currentBalance": 30238556,
+      "allocatedAmount": 21854261,
+      "unallocatedAmount": 8384295,
+      "inceptionDate": "2022-11-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "David Chen",
+      "createdAt": "2022-05-10T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_047",
+    "fields": {
+      "name": "Isabella Rockefeller",
+      "email": "isabellarockefeller@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 19315482,
+      "currentBalance": 20686347,
+      "allocatedAmount": 16963426,
+      "unallocatedAmount": 3722920,
+      "inceptionDate": "2020-05-31T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2022-11-04T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_048",
+    "fields": {
+      "name": "Sebastian Carnegie",
+      "email": "sebastiancarnegie@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 37081897,
+      "currentBalance": 37310735,
+      "allocatedAmount": 35416654,
+      "unallocatedAmount": 1894081,
+      "inceptionDate": "2022-10-23T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2020-10-19T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_049",
+    "fields": {
+      "name": "Victoria Astor",
+      "email": "victoriaastor@private.com",
+      "type": "uhnwi",
+      "status": "pending",
+      "totalCommitment": 26331253,
+      "currentBalance": 26195054,
+      "allocatedAmount": 26296971,
+      "unallocatedAmount": -101917,
+      "inceptionDate": "2022-03-12T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2021-04-09T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_050",
+    "fields": {
+      "name": "Maximilian Morgan",
+      "email": "maximilianmorgan@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 32543871,
+      "currentBalance": 31132614,
+      "allocatedAmount": 28354814,
+      "unallocatedAmount": 2777800,
+      "inceptionDate": "2020-01-05T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Maria Garcia",
+      "createdAt": "2020-02-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_051",
+    "fields": {
+      "name": "Charlotte Gould",
+      "email": "charlottegould@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 24360917,
+      "currentBalance": 23468983,
+      "allocatedAmount": 19070692,
+      "unallocatedAmount": 4398291,
+      "inceptionDate": "2022-11-08T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Michael Brown",
+      "createdAt": "2022-01-03T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_052",
+    "fields": {
+      "name": "Nicholas Mellon",
+      "email": "nicholasmellon@private.com",
+      "type": "uhnwi",
+      "status": "pending",
+      "totalCommitment": 49490689,
+      "currentBalance": 49269278,
+      "allocatedAmount": 48453417,
+      "unallocatedAmount": 815861,
+      "inceptionDate": "2020-08-20T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "David Chen",
+      "createdAt": "2021-04-23T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_053",
+    "fields": {
+      "name": "Sophia DuPont",
+      "email": "sophiadupont@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 13503669,
+      "currentBalance": 14836360,
+      "allocatedAmount": 11836834,
+      "unallocatedAmount": 2999526,
+      "inceptionDate": "2020-02-11T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2022-06-22T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_054",
+    "fields": {
+      "name": "Theodore Hearst",
+      "email": "theodorehearst@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 15864437,
+      "currentBalance": 15109895,
+      "allocatedAmount": 12322082,
+      "unallocatedAmount": 2787813,
+      "inceptionDate": "2020-11-02T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2023-08-26T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_055",
+    "fields": {
+      "name": "Grace Vanderbilt",
+      "email": "gracevanderbilt@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 21378021,
+      "currentBalance": 20511733,
+      "allocatedAmount": 19953787,
+      "unallocatedAmount": 557947,
+      "inceptionDate": "2022-05-20T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2022-09-01T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_056",
+    "fields": {
+      "name": "Frederick Rockefeller",
+      "email": "frederickrockefeller@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 18003891,
+      "currentBalance": 17797459,
+      "allocatedAmount": 13592109,
+      "unallocatedAmount": 4205349,
+      "inceptionDate": "2020-04-05T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2021-05-25T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_057",
+    "fields": {
+      "name": "Eleanor Carnegie",
+      "email": "eleanorcarnegie@private.com",
+      "type": "uhnwi",
+      "status": "pending",
+      "totalCommitment": 10227645,
+      "currentBalance": 10389852,
+      "allocatedAmount": 9324214,
+      "unallocatedAmount": 1065638,
+      "inceptionDate": "2023-01-25T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2022-12-30T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_058",
+    "fields": {
+      "name": "Augustus Astor",
+      "email": "augustusastor@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 10612406,
+      "currentBalance": 10801798,
+      "allocatedAmount": 10017030,
+      "unallocatedAmount": 784768,
+      "inceptionDate": "2023-12-13T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2021-08-09T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_059",
+    "fields": {
+      "name": "Margaret Morgan",
+      "email": "margaretmorgan@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 34773895,
+      "currentBalance": 34266688,
+      "allocatedAmount": 33527525,
+      "unallocatedAmount": 739163,
+      "inceptionDate": "2020-05-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2020-09-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_060",
+    "fields": {
+      "name": "Cornelius Gould",
+      "email": "corneliusgould@private.com",
+      "type": "uhnwi",
+      "status": "active",
+      "totalCommitment": 43509088,
+      "currentBalance": 43217409,
+      "allocatedAmount": 42667175,
+      "unallocatedAmount": 550233,
+      "inceptionDate": "2023-06-12T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2021-04-25T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_061",
+    "fields": {
+      "name": "Elon Musk",
+      "email": "elonmusk@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 2202413,
+      "currentBalance": 2061298,
+      "allocatedAmount": 2187927,
+      "unallocatedAmount": -126630,
+      "inceptionDate": "2020-02-11T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2021-08-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_062",
+    "fields": {
+      "name": "Mark Zuckerberg",
+      "email": "markzuckerberg@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 917802,
+      "currentBalance": 968389,
+      "allocatedAmount": 899312,
+      "unallocatedAmount": 69078,
+      "inceptionDate": "2022-11-20T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2021-07-14T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_063",
+    "fields": {
+      "name": "Jeff Bezos",
+      "email": "jeffbezos@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4404671,
+      "currentBalance": 4718331,
+      "allocatedAmount": 3921444,
+      "unallocatedAmount": 796887,
+      "inceptionDate": "2020-10-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2023-09-10T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_064",
+    "fields": {
+      "name": "Bill Gates",
+      "email": "billgates@private.com",
+      "type": "founder_entrepreneur",
+      "status": "pending",
+      "totalCommitment": 4100975,
+      "currentBalance": 3819905,
+      "allocatedAmount": 2949657,
+      "unallocatedAmount": 870248,
+      "inceptionDate": "2023-12-02T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2020-03-01T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_065",
+    "fields": {
+      "name": "Larry Page",
+      "email": "larrypage@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4564233,
+      "currentBalance": 4238616,
+      "allocatedAmount": 3224020,
+      "unallocatedAmount": 1014597,
+      "inceptionDate": "2022-12-14T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Sarah Wilson",
+      "createdAt": "2022-07-24T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_066",
+    "fields": {
+      "name": "Sergey Brin",
+      "email": "sergeybrin@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 3277426,
+      "currentBalance": 3491817,
+      "allocatedAmount": 2882413,
+      "unallocatedAmount": 609404,
+      "inceptionDate": "2022-01-08T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2023-09-03T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_067",
+    "fields": {
+      "name": "Jack Ma",
+      "email": "jackma@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4781332,
+      "currentBalance": 4413409,
+      "allocatedAmount": 4627620,
+      "unallocatedAmount": -214211,
+      "inceptionDate": "2021-05-15T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2020-06-25T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_068",
+    "fields": {
+      "name": "Pony Ma",
+      "email": "ponyma@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 3432192,
+      "currentBalance": 3487224,
+      "allocatedAmount": 2909644,
+      "unallocatedAmount": 577580,
+      "inceptionDate": "2023-11-02T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2022-04-23T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_069",
+    "fields": {
+      "name": "Zhang Yiming",
+      "email": "zhangyiming@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 1123945,
+      "currentBalance": 1101572,
+      "allocatedAmount": 788970,
+      "unallocatedAmount": 312602,
+      "inceptionDate": "2023-09-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2023-01-30T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_070",
+    "fields": {
+      "name": "Brian Chesky",
+      "email": "brianchesky@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 3888248,
+      "currentBalance": 3876291,
+      "allocatedAmount": 3886726,
+      "unallocatedAmount": -10435,
+      "inceptionDate": "2022-12-20T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2022-03-30T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_071",
+    "fields": {
+      "name": "Travis Kalanick",
+      "email": "traviskalanick@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4215841,
+      "currentBalance": 4387116,
+      "allocatedAmount": 4103578,
+      "unallocatedAmount": 283538,
+      "inceptionDate": "2022-03-16T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2023-04-08T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_072",
+    "fields": {
+      "name": "Evan Spiegel",
+      "email": "evanspiegel@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4326030,
+      "currentBalance": 3896420,
+      "allocatedAmount": 3608100,
+      "unallocatedAmount": 288319,
+      "inceptionDate": "2020-04-29T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2022-03-04T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_073",
+    "fields": {
+      "name": "Bobby Murphy",
+      "email": "bobbymurphy@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 2533021,
+      "currentBalance": 2737938,
+      "allocatedAmount": 1960792,
+      "unallocatedAmount": 777146,
+      "inceptionDate": "2022-04-29T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2020-09-23T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_074",
+    "fields": {
+      "name": "Daniel Ek",
+      "email": "danielek@private.com",
+      "type": "founder_entrepreneur",
+      "status": "pending",
+      "totalCommitment": 3546149,
+      "currentBalance": 3336460,
+      "allocatedAmount": 3011185,
+      "unallocatedAmount": 325275,
+      "inceptionDate": "2023-05-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2021-03-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_075",
+    "fields": {
+      "name": "Martin Lorentzon",
+      "email": "martinlorentzon@private.com",
+      "type": "founder_entrepreneur",
+      "status": "active",
+      "totalCommitment": 4876605,
+      "currentBalance": 4497144,
+      "allocatedAmount": 4667477,
+      "unallocatedAmount": -170333,
+      "inceptionDate": "2020-06-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2020-09-22T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_076",
+    "fields": {
+      "name": "Apple Inc.",
+      "email": "appleinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 8168887,
+      "currentBalance": 7959535,
+      "allocatedAmount": 6610719,
+      "unallocatedAmount": 1348816,
+      "inceptionDate": "2023-05-30T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2022-02-15T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_077",
+    "fields": {
+      "name": "Microsoft Corporation",
+      "email": "microsoftcorporation@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 13371030,
+      "currentBalance": 13379681,
+      "allocatedAmount": 9593027,
+      "unallocatedAmount": 3786654,
+      "inceptionDate": "2020-10-17T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2023-07-05T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_078",
+    "fields": {
+      "name": "Alphabet Inc.",
+      "email": "alphabetinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 14579583,
+      "currentBalance": 15715562,
+      "allocatedAmount": 11836389,
+      "unallocatedAmount": 3879173,
+      "inceptionDate": "2022-04-19T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Bob Manager",
+      "createdAt": "2021-11-02T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_079",
+    "fields": {
+      "name": "Amazon.com Inc.",
+      "email": "amazoncominc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 18226167,
+      "currentBalance": 19759437,
+      "allocatedAmount": 17609814,
+      "unallocatedAmount": 2149623,
+      "inceptionDate": "2022-02-01T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2022-10-06T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_080",
+    "fields": {
+      "name": "Tesla Inc.",
+      "email": "teslainc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 14608253,
+      "currentBalance": 14260995,
+      "allocatedAmount": 13559861,
+      "unallocatedAmount": 701134,
+      "inceptionDate": "2023-01-09T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Maria Garcia",
+      "createdAt": "2023-03-03T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_081",
+    "fields": {
+      "name": "Meta Platforms Inc.",
+      "email": "metaplatformsinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 8059590,
+      "currentBalance": 8480175,
+      "allocatedAmount": 5965614,
+      "unallocatedAmount": 2514562,
+      "inceptionDate": "2023-06-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jessica Taylor",
+      "createdAt": "2022-01-08T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_082",
+    "fields": {
+      "name": "Netflix Inc.",
+      "email": "netflixinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 11421911,
+      "currentBalance": 11209067,
+      "allocatedAmount": 9372407,
+      "unallocatedAmount": 1836660,
+      "inceptionDate": "2023-06-16T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Sarah Wilson",
+      "createdAt": "2020-05-04T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_083",
+    "fields": {
+      "name": "Salesforce Inc.",
+      "email": "salesforceinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 16920357,
+      "currentBalance": 17786647,
+      "allocatedAmount": 15184157,
+      "unallocatedAmount": 2602490,
+      "inceptionDate": "2021-02-26T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2022-04-09T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_084",
+    "fields": {
+      "name": "Adobe Inc.",
+      "email": "adobeinc@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 7665512,
+      "currentBalance": 8025577,
+      "allocatedAmount": 5627022,
+      "unallocatedAmount": 2398556,
+      "inceptionDate": "2023-11-09T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2023-04-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_085",
+    "fields": {
+      "name": "Oracle Corporation",
+      "email": "oraclecorporation@corp.com",
+      "type": "corporate",
+      "status": "active",
+      "totalCommitment": 11873136,
+      "currentBalance": 12475229,
+      "allocatedAmount": 11651818,
+      "unallocatedAmount": 823411,
+      "inceptionDate": "2022-06-29T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Daniel Smith",
+      "createdAt": "2023-04-14T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_086",
+    "fields": {
+      "name": "Rockefeller Family Office",
+      "email": "rockefellerfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 18062546,
+      "currentBalance": 18305221,
+      "allocatedAmount": 16244819,
+      "unallocatedAmount": 2060402,
+      "inceptionDate": "2020-02-29T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "David Chen",
+      "createdAt": "2021-08-31T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_087",
+    "fields": {
+      "name": "Vanderbilt Family Office",
+      "email": "vanderbiltfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 25622969,
+      "currentBalance": 26666935,
+      "allocatedAmount": 22200701,
+      "unallocatedAmount": 4466234,
+      "inceptionDate": "2021-04-06T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Maria Garcia",
+      "createdAt": "2022-11-01T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_088",
+    "fields": {
+      "name": "Carnegie Family Office",
+      "email": "carnegiefamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 21252038,
+      "currentBalance": 21301963,
+      "allocatedAmount": 20706965,
+      "unallocatedAmount": 594998,
+      "inceptionDate": "2021-01-19T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2022-08-22T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_089",
+    "fields": {
+      "name": "Astor Family Office",
+      "email": "astorfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 27261731,
+      "currentBalance": 25922698,
+      "allocatedAmount": 19120430,
+      "unallocatedAmount": 6802269,
+      "inceptionDate": "2023-04-15T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Lisa Rodriguez",
+      "createdAt": "2023-12-11T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_090",
+    "fields": {
+      "name": "Morgan Family Office",
+      "email": "morganfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 20276408,
+      "currentBalance": 19188997,
+      "allocatedAmount": 15539382,
+      "unallocatedAmount": 3649615,
+      "inceptionDate": "2021-11-13T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2022-10-14T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_091",
+    "fields": {
+      "name": "Gould Family Office",
+      "email": "gouldfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 21090106,
+      "currentBalance": 23150981,
+      "allocatedAmount": 16953399,
+      "unallocatedAmount": 6197582,
+      "inceptionDate": "2022-08-12T19:00:00.000Z",
+      "kycStatus": "pending",
+      "documents": [],
+      "assignedManager": "Emily Davis",
+      "createdAt": "2020-05-23T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_092",
+    "fields": {
+      "name": "Mellon Family Office",
+      "email": "mellonfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 10770694,
+      "currentBalance": 10307618,
+      "allocatedAmount": 10638958,
+      "unallocatedAmount": -331340,
+      "inceptionDate": "2023-12-03T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Michael Brown",
+      "createdAt": "2022-07-05T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_093",
+    "fields": {
+      "name": "DuPont Family Office",
+      "email": "dupontfamilyoffice@familyoffice.com",
+      "type": "family_office",
+      "status": "active",
+      "totalCommitment": 13873736,
+      "currentBalance": 15182585,
+      "allocatedAmount": 12631597,
+      "unallocatedAmount": 2550988,
+      "inceptionDate": "2022-01-03T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Matthew Anderson",
+      "createdAt": "2023-09-26T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_094",
+    "fields": {
+      "name": "BlackRock Asset Management",
+      "email": "blackrockassetmanagement@assetmgmt.com",
+      "type": "institutional",
+      "status": "active",
+      "totalCommitment": 40055711,
+      "currentBalance": 41491032,
+      "allocatedAmount": 30647954,
+      "unallocatedAmount": 10843079,
+      "inceptionDate": "2020-05-18T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "James Thompson",
+      "createdAt": "2023-07-20T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_095",
+    "fields": {
+      "name": "Vanguard Group",
+      "email": "vanguardgroup@assetmgmt.com",
+      "type": "institutional",
+      "status": "active",
+      "totalCommitment": 14220458,
+      "currentBalance": 14357638,
+      "allocatedAmount": 10871528,
+      "unallocatedAmount": 3486110,
+      "inceptionDate": "2022-02-23T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2021-10-19T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_096",
+    "fields": {
+      "name": "State Street Global Advisors",
+      "email": "statestreetglobaladvisors@assetmgmt.com",
+      "type": "institutional",
+      "status": "active",
+      "totalCommitment": 23015104,
+      "currentBalance": 25204845,
+      "allocatedAmount": 18868596,
+      "unallocatedAmount": 6336249,
+      "inceptionDate": "2023-11-09T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Amanda Johnson",
+      "createdAt": "2023-10-18T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_097",
+    "fields": {
+      "name": "Fidelity Investments",
+      "email": "fidelityinvestments@assetmgmt.com",
+      "type": "institutional",
+      "status": "active",
+      "totalCommitment": 31911671,
+      "currentBalance": 32424521,
+      "allocatedAmount": 30899976,
+      "unallocatedAmount": 1524545,
+      "inceptionDate": "2021-08-20T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Michael Brown",
+      "createdAt": "2020-07-21T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_098",
+    "fields": {
+      "name": "T. Rowe Price",
+      "email": "troweprice@assetmgmt.com",
+      "type": "institutional",
+      "status": "active",
+      "totalCommitment": 33881682,
+      "currentBalance": 32054870,
+      "allocatedAmount": 27647069,
+      "unallocatedAmount": 4407802,
+      "inceptionDate": "2021-08-20T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Robert Wilson",
+      "createdAt": "2023-08-24T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_099",
+    "fields": {
+      "name": "Goldman Sachs Asset Management",
+      "email": "goldmansachsassetmanagement@assetmgmt.com",
+      "type": "institutional_investor",
+      "status": "active",
+      "totalCommitment": 100952461,
+      "currentBalance": 93057240,
+      "allocatedAmount": 100545445,
+      "unallocatedAmount": -7488206,
+      "inceptionDate": "2023-06-06T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Sarah Wilson",
+      "createdAt": "2021-10-16T19:00:00.000Z",
+      "updatedAt": "2024-06-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "investor_100",
+    "fields": {
+      "name": "JPMorgan Asset Management",
+      "email": "jpmorganassetmanagement@assetmgmt.com",
+      "type": "institutional_investor",
+      "status": "active",
+      "totalCommitment": 121066633,
+      "currentBalance": 128785218,
+      "allocatedAmount": 98565355,
+      "unallocatedAmount": 30219863,
+      "inceptionDate": "2022-11-23T19:00:00.000Z",
+      "kycStatus": "approved",
+      "documents": [],
+      "assignedManager": "Jennifer Lee",
+      "createdAt": "2023-11-09T19:00:00.000Z",
       "updatedAt": "2024-06-01T00:00:00.000Z"
     }
   }
-] 
+]

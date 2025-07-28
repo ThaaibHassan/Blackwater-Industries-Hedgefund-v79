@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # Traefik reverse proxy
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/certificates:/certificates
+      - ./traefik/config:/etc/traefik
+    environment:
+      - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
+      - TRAEFIK_USERNAME=${TRAEFIK_USERNAME}
+      - TRAEFIK_HASHED_PASSWORD=${TRAEFIK_HASHED_PASSWORD}
+      - ACME_EMAIL=${ACME_EMAIL}
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_USERNAME}:${TRAEFIK_HASHED_PASSWORD}"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+  # MetaTrader 5 with VNC
+  mt5:
+    build:
+      context: ./mt5
+      dockerfile: Dockerfile
+    container_name: mt5
+    restart: unless-stopped
+    environment:
+      - CUSTOM_USER=${CUSTOM_USER}
+      - PASSWORD=${PASSWORD}
+      - VNC_DOMAIN=${VNC_DOMAIN}
+    volumes:
+      - ./mt5/config:/home/${CUSTOM_USER}/.wine
+      - ./mt5/data:/home/${CUSTOM_USER}/Documents
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mt5-vnc.rule=Host(`${VNC_DOMAIN}`)"
+      - "traefik.http.routers.mt5-vnc.entrypoints=websecure"
+      - "traefik.http.routers.mt5-vnc.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mt5-vnc.loadbalancer.server.port=6080"
+
+  # Python API for MT5 integration
+  mt5-api:
+    build:
+      context: ./mt5-api
+      dockerfile: Dockerfile
+    container_name: mt5-api
+    restart: unless-stopped
+    environment:
+      - MT5_SERVER=${MT5_SERVER}
+      - MT5_LOGIN=${MT5_LOGIN}
+      - MT5_PASSWORD=${MT5_PASSWORD}
+      - MT5_DEMO=${MT5_DEMO}
+    volumes:
+      - ./mt5-api:/app
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mt5-api.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.mt5-api.entrypoints=websecure"
+      - "traefik.http.routers.mt5-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mt5-api.loadbalancer.server.port=8000"
+
+  # Frontend React app
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: hedge-fund-frontend
+    restart: unless-stopped
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${FRONTEND_DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+networks:
+  traefik-public:
+    external: true 

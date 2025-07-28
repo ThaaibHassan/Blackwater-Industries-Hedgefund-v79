@@ -173,12 +173,16 @@ const CompliancePage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'in_progress': return 'bg-blue-100 text-blue-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'overdue': return 'bg-red-100 text-red-800';
-      case 'scheduled': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'compliant':
+        return 'bg-green-100 text-green-800';
+      case 'in_progress':
+        return 'bg-primary/10 text-primary';
+      case 'non_compliant':
+        return 'bg-red-100 text-red-800';
+      case 'pending_review':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -511,7 +515,7 @@ const CompliancePage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center space-x-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center space-x-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600" />
                 <div>
                   <p className="text-sm font-medium text-red-800">AML Review Overdue</p>

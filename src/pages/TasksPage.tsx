@@ -22,114 +22,74 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, CheckCircle, Clock, AlertCircle, Plus, Edit, Trash2, X, Save } from 'lucide-react';
+import { Task } from '@/types';
+import { useData } from '@/context/DataContext';
+
+const emptyTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt'> = {
+  title: '',
+  description: '',
+  type: 'custom',
+  status: 'pending',
+  priority: 'medium',
+  assigneeId: '',
+  assigneeName: '',
+  dueDate: new Date(),
+  checklist: [],
+  tags: [],
+};
 
 const TasksPage = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: 'Review TSLA Research',
-      description: 'Review and approve the latest Tesla research report',
-      status: 'pending' as const,
-      priority: 'high' as const,
-      assignee: 'John Smith',
-      dueDate: '2024-01-15',
-      category: 'research' as const
-    },
-    {
-      id: 2,
-      title: 'Portfolio Rebalance',
-      description: 'Execute portfolio rebalancing trades',
-      status: 'in_progress' as const,
-      priority: 'medium' as const,
-      assignee: 'Sarah Johnson',
-      dueDate: '2024-01-16',
-      category: 'trading' as const
-    }
-  ]);
-
-  const [workflows, setWorkflows] = useState([
-    {
-      id: 1,
-      title: 'Trade Approval',
-      status: 'completed' as const,
-      assignee: 'Mike Chen',
-      completedAt: '2024-01-14T10:30:00Z'
-    },
-    {
-      id: 2,
-      title: 'Research Review',
-      status: 'in_progress' as const,
-      assignee: 'Lisa Wang',
-      startedAt: '2024-01-13T14:00:00Z'
-    }
-  ]);
-
+  const { tasks, addTask, updateTask, deleteTask, completeTask, startTask } = useData();
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
-  const [newTask, setNewTask] = useState({
-    title: '',
-    description: '',
-    priority: 'medium' as const,
-    assignee: '',
-    dueDate: '',
-    category: 'general' as const
-  });
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [newTask, setNewTask] = useState<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>(emptyTask);
   const { toast } = useToast();
 
   const handleNewTask = () => {
-    console.log('handleNewTask called'); // Debug log
     setIsAddingTask(true);
     setEditingTaskId(null);
-    setNewTask({
-      title: '',
-      description: '',
-      priority: 'medium',
-      assignee: '',
-      dueDate: '',
-      category: 'general'
-    });
+    setNewTask(emptyTask);
   };
 
   const handleAddTask = () => {
-    if (newTask.title && newTask.description && newTask.assignee && newTask.dueDate) {
-      const task = {
-        id: Date.now(),
+    if (newTask.title && newTask.description && newTask.assigneeId && newTask.assigneeName && newTask.dueDate) {
+      const now = new Date();
+      const task: Task = {
         ...newTask,
-        status: 'pending' as const
+        id: Date.now().toString(),
+        createdAt: now,
+        updatedAt: now,
       };
-      setTasks([...tasks, task]);
-      setNewTask({
-        title: '',
-        description: '',
-        priority: 'medium',
-        assignee: '',
-        dueDate: '',
-        category: 'general'
-      });
+      addTask(task);
+      setNewTask(emptyTask);
       setIsAddingTask(false);
       toast({
-        title: "Task Added",
-        description: "New task has been created successfully.",
+        title: 'Task Added',
+        description: 'New task has been created successfully.',
       });
     } else {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleEditTask = (taskId: number) => {
-    const task = tasks.find(t => t.id === taskId);
+  const handleEditTask = (taskId: string) => {
+    const task = tasks.find((t) => t.id === taskId);
     if (task) {
       setNewTask({
         title: task.title,
-        description: task.description,
+        description: task.description || '',
+        type: task.type,
+        status: task.status,
         priority: task.priority,
-        assignee: task.assignee,
-        dueDate: task.dueDate,
-        category: task.category
+        assigneeId: task.assigneeId,
+        assigneeName: task.assigneeName,
+        dueDate: typeof task.dueDate === 'string' ? new Date(task.dueDate) : task.dueDate,
+        checklist: task.checklist || [],
+        tags: task.tags || [],
       });
       setEditingTaskId(taskId);
       setIsAddingTask(true);
@@ -137,31 +97,27 @@ const TasksPage = () => {
   };
 
   const handleUpdateTask = () => {
-    if (editingTaskId && newTask.title && newTask.description && newTask.assignee && newTask.dueDate) {
-      setTasks(tasks.map(task => 
-        task.id === editingTaskId 
-          ? { ...task, ...newTask }
-          : task
-      ));
-      setNewTask({
-        title: '',
-        description: '',
-        priority: 'medium',
-        assignee: '',
-        dueDate: '',
-        category: 'general'
-      });
+    if (editingTaskId && newTask.title && newTask.description && newTask.assigneeId && newTask.assigneeName && newTask.dueDate) {
+      const now = new Date();
+      const updatedTask: Task = {
+        ...newTask,
+        id: editingTaskId,
+        createdAt: now,
+        updatedAt: now,
+      };
+      updateTask(updatedTask);
+      setNewTask(emptyTask);
       setIsAddingTask(false);
       setEditingTaskId(null);
       toast({
-        title: "Task Updated",
-        description: "Task has been updated successfully.",
+        title: 'Task Updated',
+        description: 'Task has been updated successfully.',
       });
     } else {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
       });
     }
   };
@@ -169,41 +125,22 @@ const TasksPage = () => {
   const handleCancelForm = () => {
     setIsAddingTask(false);
     setEditingTaskId(null);
-    setNewTask({
-      title: '',
-      description: '',
-      priority: 'medium',
-      assignee: '',
-      dueDate: '',
-      category: 'general'
-    });
+    setNewTask(emptyTask);
   };
 
-  const handleCompleteTask = (taskId: number) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, status: 'completed' } : task
-    ));
-    toast({
-      title: "Task Completed",
-      description: "Task has been marked as completed.",
-    });
+  const handleCompleteTask = (taskId: string) => {
+    completeTask(taskId);
   };
 
-  const handleStartTask = (taskId: number) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, status: 'in_progress' } : task
-    ));
-    toast({
-      title: "Task Started",
-      description: "Task has been started.",
-    });
+  const handleStartTask = (taskId: string) => {
+    startTask(taskId);
   };
 
-  const handleDeleteTask = (taskId: number) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+  const handleDeleteTask = (taskId: string) => {
+    deleteTask(taskId);
     toast({
-      title: "Task Deleted",
-      description: "Task has been removed.",
+      title: 'Task Deleted',
+      description: 'Task has been removed.',
     });
   };
 
@@ -212,9 +149,11 @@ const TasksPage = () => {
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-primary/10 text-primary';
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
+      case 'overdue':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -250,7 +189,7 @@ const TasksPage = () => {
 
       {/* INLINE TASK FORM */}
       {isAddingTask && (
-        <Card className="border-2 border-blue-200 bg-blue-50/50">
+        <Card className="border-2 border-primary/20 bg-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               {editingTaskId ? 'Edit Task' : 'Add New Task'}
@@ -276,8 +215,8 @@ const TasksPage = () => {
                   <Label htmlFor="assignee">Assignee *</Label>
                   <Input
                     id="assignee"
-                    value={newTask.assignee}
-                    onChange={(e) => setNewTask({ ...newTask, assignee: e.target.value })}
+                    value={newTask.assigneeName}
+                    onChange={(e) => setNewTask({ ...newTask, assigneeName: e.target.value })}
                     placeholder="Enter assignee name"
                     className="mt-1"
                   />
@@ -312,15 +251,14 @@ const TasksPage = () => {
                 </div>
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Select value={newTask.category} onValueChange={(value: 'general' | 'research' | 'trading' | 'compliance') => setNewTask({ ...newTask, category: value })}>
+                  <Select value={newTask.type} onValueChange={(value: 'research_analysis' | 'trade_review' | 'custom') => setNewTask({ ...newTask, type: value })}>
                     <SelectTrigger className="mt-1">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="general">General</SelectItem>
-                      <SelectItem value="research">Research</SelectItem>
-                      <SelectItem value="trading">Trading</SelectItem>
-                      <SelectItem value="compliance">Compliance</SelectItem>
+                      <SelectItem value="research_analysis">Research Analysis</SelectItem>
+                      <SelectItem value="trade_review">Trade Review</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -329,8 +267,8 @@ const TasksPage = () => {
                   <Input
                     id="dueDate"
                     type="date"
-                    value={newTask.dueDate}
-                    onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                    value={newTask.dueDate.toISOString().split('T')[0]}
+                    onChange={(e) => setNewTask({ ...newTask, dueDate: new Date(e.target.value) })}
                     className="mt-1"
                   />
                 </div>
@@ -370,7 +308,7 @@ const TasksPage = () => {
                   <div className="flex-1">
                     <div className="text-sm font-medium">{task.title}</div>
                     <div className="text-xs text-muted-foreground">
-                      Due: {new Date(task.dueDate).toLocaleDateString()}
+                      Due: {task.dueDate.toLocaleDateString()}
                     </div>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge className={getStatusColor(task.status)}>
@@ -430,27 +368,7 @@ const TasksPage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {workflows.map((workflow) => (
-                <div key={workflow.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                  {workflow.status === 'completed' ? (
-                    <CheckCircle className="h-4 w-4 text-success" />
-                  ) : (
-                    <Clock className="h-4 w-4 text-warning" />
-                  )}
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{workflow.title}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {workflow.status === 'completed' ? 'Completed' : 'In Progress'}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {workflow.assignee}
-                    </div>
-                  </div>
-                  <Badge className={getStatusColor(workflow.status)}>
-                    {workflow.status.replace('_', ' ')}
-                  </Badge>
-                </div>
-              ))}
+              {/* Mock workflows array removed */}
             </div>
           </CardContent>
         </Card>
