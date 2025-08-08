@@ -63,6 +63,7 @@ import {
   TrendingUp,
   TrendingDown,
   AlertCircle,
+  AlertTriangle,
   CheckCircle,
   XCircle,
   Clock,
