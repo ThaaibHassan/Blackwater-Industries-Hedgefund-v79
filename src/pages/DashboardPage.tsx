@@ -18,7 +18,51 @@ import {
   Clock,
   CheckCircle,
   Download,
-  Plus
+  Plus,
+  BarChart3,
+  Brain,
+  Shield,
+  CreditCard,
+  Leaf,
+  Gauge,
+  ArrowUpDown,
+  Database,
+  UserCheck,
+  PieChart,
+  Globe,
+  Briefcase,
+  Zap,
+  BarChart,
+  TrendingDown as TrendingDownIcon,
+  AlertCircle,
+  Star,
+  Eye,
+  ThumbsUp,
+  ThumbsDown,
+  Clock as ClockIcon,
+  CheckCircle as CheckCircleIcon,
+  XCircle,
+  Play,
+  Pause,
+  StopCircle,
+  RefreshCw,
+  TrendingUp as TrendingUpIcon,
+  Percent,
+  Hash,
+  Layers,
+  Compass,
+  Lightbulb,
+  BookOpen,
+  Search,
+  Filter,
+  Settings,
+  Bell,
+  HelpCircle,
+  Info,
+  ExternalLink,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import AdvancedChart from '@/components/charts/AdvancedChart';
 import { useState, useEffect } from 'react';
@@ -272,7 +316,9 @@ const DashboardPage = () => {
     tasks,
     trades,
     researchNotes,
-    investors
+    investors,
+    workflows,
+    portfolioPositions
   } = useData();
   const { user } = useAuth();
   const { getDashboardLayout, setDashboardLayout } = useWatchlists();
@@ -281,6 +327,36 @@ const DashboardPage = () => {
   const taskStats = getTaskStats();
   const investorStats = getInvestorStats();
   const tradeStats = getTradeStats();
+
+  // Additional comprehensive stats
+  const researchStats = {
+    total: researchNotes.length,
+    buy: researchNotes.filter(n => n.recommendation === 'buy').length,
+    sell: researchNotes.filter(n => n.recommendation === 'sell').length,
+    hold: researchNotes.filter(n => n.recommendation === 'hold').length,
+    published: researchNotes.filter(n => n.status === 'published').length,
+    inReview: researchNotes.filter(n => n.status === 'in_review').length,
+    avgPriority: researchNotes.length > 0 ? 
+      researchNotes.reduce((sum, n) => {
+        const priorityScore = n.priority === 'urgent' ? 4 : n.priority === 'high' ? 3 : n.priority === 'medium' ? 2 : 1;
+        return sum + priorityScore;
+      }, 0) / researchNotes.length : 0
+  };
+
+  const workflowStats = {
+    total: workflows.length,
+    completed: workflows.filter(w => w.status === 'completed').length,
+    inProgress: workflows.filter(w => w.status === 'in_progress').length,
+    completionRate: workflows.length > 0 ? (workflows.filter(w => w.status === 'completed').length / workflows.length) * 100 : 0
+  };
+
+  const riskStats = {
+    totalPositions: portfolioPositions.length,
+    profitablePositions: portfolioPositions.filter(p => p.unrealizedPnl > 0).length,
+    losingPositions: portfolioPositions.filter(p => p.unrealizedPnl < 0).length,
+    avgPositionSize: portfolioPositions.length > 0 ? portfolioPositions.reduce((sum, p) => sum + p.marketValue, 0) / portfolioPositions.length : 0,
+    largestPosition: portfolioPositions.length > 0 ? Math.max(...portfolioPositions.map(p => p.marketValue)) : 0
+  };
 
   const formatCurrency = (amount: number | undefined | null) => {
     if (typeof amount !== 'number' || isNaN(amount)) amount = 0;
@@ -298,6 +374,7 @@ const DashboardPage = () => {
   const recentTasks = tasks.slice(0, 5);
   const recentTrades = trades.slice(0, 5);
   const recentResearch = researchNotes.slice(0, 3);
+  const recentWorkflows = workflows.slice(0, 3);
 
   const [widgetOrder, setWidgetOrder] = React.useState(widgetRegistry.map(w => w.id));
   const [enabledWidgets, setEnabledWidgets] = React.useState<Set<string>>(new Set(widgetRegistry.map(w => w.id)));
@@ -332,24 +409,24 @@ const DashboardPage = () => {
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Executive Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back, {user?.displayName}. Here's what's happening today.
+            Welcome back, {user?.displayName}. Here's your comprehensive overview.
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
-            Download
+            Export Report
           </Button>
           <Button size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            New Report
+            New Analysis
           </Button>
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {/* Primary Key Metrics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -416,7 +493,74 @@ const DashboardPage = () => {
         </Card>
       </div>
 
-      {/* Charts and Detailed Views */}
+      {/* Secondary Metrics */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Trading Activity</CardTitle>
+            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{tradeStats.executed}</div>
+            <div className="text-xs text-muted-foreground">
+              of {tradeStats.total} total trades
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {formatCurrency(tradeStats.totalValue)} volume
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Research Quality</CardTitle>
+            <Brain className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{researchStats.published}</div>
+            <div className="text-xs text-muted-foreground">
+              published ({researchStats.total} total)
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {researchStats.inReview} in review
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Workflow Progress</CardTitle>
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{workflowStats.completionRate.toFixed(1)}%</div>
+            <div className="text-xs text-muted-foreground">
+              completion rate
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {workflowStats.completed} of {workflowStats.total} completed
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Risk Metrics</CardTitle>
+            <Shield className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{riskStats.profitablePositions}</div>
+            <div className="text-xs text-muted-foreground">
+              of {riskStats.totalPositions} profitable
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {formatCurrency(riskStats.avgPositionSize)} avg position
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Detailed Analytics */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
@@ -450,6 +594,45 @@ const DashboardPage = () => {
 
         <Card className="col-span-3">
           <CardHeader>
+            <CardTitle>Research Insights</CardTitle>
+            <CardDescription>Latest research recommendations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ThumbsUp className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Buy</span>
+                </div>
+                <Badge variant="secondary">{researchStats.buy}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ThumbsDown className="h-4 w-4 text-red-600" />
+                  <span className="text-sm">Sell</span>
+                </div>
+                <Badge variant="secondary">{researchStats.sell}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Pause className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm">Hold</span>
+                </div>
+                <Badge variant="secondary">{researchStats.hold}</Badge>
+              </div>
+              <Progress 
+                value={(researchStats.buy / researchStats.total) * 100} 
+                className="h-2" 
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Comprehensive Activity Overview */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader>
             <CardTitle>Task Overview</CardTitle>
             <CardDescription>Current task status and progress</CardDescription>
           </CardHeader>
@@ -478,6 +661,114 @@ const DashboardPage = () => {
               </div>
               <Progress 
                 value={(taskStats.completed / taskStats.total) * 100} 
+                className="h-2" 
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Trading Summary</CardTitle>
+            <CardDescription>Latest trading activity</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Executed</span>
+                </div>
+                <Badge variant="secondary">{tradeStats.executed}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm">Pending</span>
+                </div>
+                <Badge variant="secondary">{tradeStats.pending}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm">Total Value</span>
+                </div>
+                <Badge variant="secondary">{formatCurrency(tradeStats.totalValue)}</Badge>
+              </div>
+              <Progress 
+                value={(tradeStats.executed / tradeStats.total) * 100} 
+                className="h-2" 
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Investor Status</CardTitle>
+            <CardDescription>Investor relationship overview</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Active</span>
+                </div>
+                <Badge variant="secondary">{investorStats.active}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Target className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm">Allocated</span>
+                </div>
+                <Badge variant="secondary">{formatCurrency(investorStats.totalAllocated)}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                  <span className="text-sm">Unallocated</span>
+                </div>
+                <Badge variant="secondary">{formatCurrency(investorStats.totalUnallocated)}</Badge>
+              </div>
+              <Progress 
+                value={investorStats.allocationPercentage} 
+                className="h-2" 
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Risk Profile</CardTitle>
+            <CardDescription>Portfolio risk metrics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TrendingUpIcon className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Profitable</span>
+                </div>
+                <Badge variant="secondary">{riskStats.profitablePositions}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TrendingDownIcon className="h-4 w-4 text-red-600" />
+                  <span className="text-sm">Losing</span>
+                </div>
+                <Badge variant="secondary">{riskStats.losingPositions}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Layers className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm">Avg Size</span>
+                </div>
+                <Badge variant="secondary">{formatCurrency(riskStats.avgPositionSize)}</Badge>
+              </div>
+              <Progress 
+                value={(riskStats.profitablePositions / riskStats.totalPositions) * 100} 
                 className="h-2" 
               />
             </div>
@@ -574,6 +865,108 @@ const DashboardPage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Workflow Status */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Active Workflows</CardTitle>
+            <CardDescription>Current workflow status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentWorkflows.map((workflow) => (
+                <div key={workflow.id} className="flex items-center space-x-3">
+                  {workflow.status === 'completed' ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Activity className="h-4 w-4 text-blue-600" />
+                  )}
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{workflow.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {workflow.assignee}
+                    </p>
+                  </div>
+                  <Badge variant={workflow.status === 'completed' ? 'default' : 'secondary'} className="text-xs">
+                    {workflow.status.replace('_', ' ')}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Performance Metrics</CardTitle>
+            <CardDescription>Key performance indicators</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <BarChart className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm">Win Rate</span>
+                </div>
+                <Badge variant="secondary">
+                  {riskStats.totalPositions > 0 ? ((riskStats.profitablePositions / riskStats.totalPositions) * 100).toFixed(1) : 0}%
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Avg P&L</span>
+                </div>
+                <Badge variant="secondary">
+                  {formatCurrency(portfolioStats.totalPnl / portfolioStats.positions)}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-4 w-4 text-purple-600" />
+                  <span className="text-sm">ROI</span>
+                </div>
+                <Badge variant="secondary">
+                  {formatPercentage(portfolioStats.totalPnlPercent)}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>System Status</CardTitle>
+            <CardDescription>Platform health and performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Trading System</span>
+                </div>
+                <Badge variant="default">Online</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Data Feeds</span>
+                </div>
+                <Badge variant="default">Active</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Risk Engine</span>
+                </div>
+                <Badge variant="default">Monitoring</Badge>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -34,7 +34,7 @@ import {
 import { useData } from '@/context/DataContext';
 
 const PortfolioPage = () => {
-  const { portfolioPositions } = useData();
+  const { portfolioPositions, addPosition, updatePosition, deletePosition } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSector, setSelectedSector] = useState('all');
   const [selectedRisk, setSelectedRisk] = useState('all');
@@ -123,6 +123,7 @@ const PortfolioPage = () => {
   };
 
   const handleDeletePosition = (position: any) => {
+    deletePosition(position.id);
     toast({
       title: "Position Deleted",
       description: `Removed ${position.symbol} from portfolio`,
@@ -174,6 +175,19 @@ const PortfolioPage = () => {
       return;
     }
 
+    const positionData = {
+      symbol: newPosition.symbol,
+      name: newPosition.name,
+      side: newPosition.side,
+      quantity: newPosition.quantity,
+      avgPrice: newPosition.avgPrice,
+      currentPrice: newPosition.currentPrice,
+      sector: newPosition.sector,
+      risk: newPosition.risk,
+      weight: 0 // Will be calculated by the context
+    };
+
+    addPosition(positionData);
     toast({
       title: "Position Added",
       description: `Added ${newPosition.symbol} to portfolio`,

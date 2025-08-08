@@ -2,8 +2,16 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import DashboardPage from './pages/DashboardPage';
 import PortfolioPage from './pages/PortfolioPage';
+import PerformanceAttributionPage from './pages/PerformanceAttributionPage';
+import AIInsightsPage from './pages/AIInsightsPage';
+import TradingEMSPage from './pages/TradingEMSPage';
 import TradesPage from './pages/TradesPage';
 import ResearchPage from './pages/ResearchPage';
+import CreditAnalysisPage from './pages/CreditAnalysisPage';
+import RiskManagementPage from './pages/RiskManagementPage';
+import ESGPage from './pages/ESGPage';
+import DataIngestionPage from './pages/DataIngestionPage';
+import AdvancedUserManagementPage from './pages/AdvancedUserManagementPage';
 import InvestorsPage from './pages/InvestorsPage';
 import ReportsPage from './pages/ReportsPage';
 import CompliancePage from './pages/CompliancePage';
@@ -29,7 +37,6 @@ function App() {
           <WatchlistProvider>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/investor-portal" element={<InvestorPortalPage />} />
               {/* Protected Routes */}
               <Route
                 path="/*"
@@ -42,8 +49,17 @@ function App() {
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<DashboardPage />} />
                 <Route path="portfolio" element={<PortfolioPage />} />
+                <Route path="performance-attribution" element={<PerformanceAttributionPage />} />
+                <Route path="ai-insights" element={<AIInsightsPage />} />
+                <Route path="trading-ems" element={<TradingEMSPage />} />
+                <Route path="investor-portal" element={<InvestorPortalPage />} />
                 <Route path="trades" element={<TradesPage />} />
                 <Route path="research" element={<ResearchPage />} />
+                <Route path="credit-analysis" element={<CreditAnalysisPage />} />
+                <Route path="risk-management" element={<RiskManagementPage />} />
+                <Route path="esg" element={<ESGPage />} />
+                <Route path="data-ingestion" element={<DataIngestionPage />} />
+                <Route path="user-management" element={<AdvancedUserManagementPage />} />
                 <Route path="investors" element={<InvestorsPage />} />
                 <Route path="reports" element={<ReportsPage />} />
                 <Route path="compliance" element={<CompliancePage />} />

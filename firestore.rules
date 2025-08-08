@@ -1,9 +1,205 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write only if the user is authenticated
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.role == 'admin';
+    }
+    
+    function isManager() {
+      return isAuthenticated() && request.auth.token.role == 'manager';
+    }
+    
+    function isAnalyst() {
+      return isAuthenticated() && request.auth.token.role == 'analyst';
+    }
+    
+    function isInvestor() {
+      return isAuthenticated() && request.auth.token.role == 'investor';
+    }
+    
+    function isCompliance() {
+      return isAuthenticated() && request.auth.token.role == 'compliance';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasPermission(permission) {
+      return isAuthenticated() && permission in request.auth.token.permissions;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin() || isManager();
+      allow create: if isAdmin();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Portfolios collection
+    match /portfolios/{portfolioId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Portfolio positions
+    match /portfolios/{portfolioId}/positions/{positionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Trades collection
+    match /trades/{tradeId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin() || isAnalyst();
+      allow delete: if isAdmin();
+    }
+    
+    // Research notes
+    match /research/{noteId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAnalyst() || isManager() || isAdmin();
+      allow delete: if isManager() || isAdmin();
+    }
+    
+    // Investors collection
+    match /investors/{investorId} {
+      allow read: if isManager() || isAdmin() || isCompliance();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Tasks collection
+    match /tasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Dashboard data
+    match /dashboard/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Dashboard subcollections
+    match /dashboard_trades/{tradeId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    match /dashboard_holdings/{holdingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    match /dashboard_performance/{perfId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // AI Insights
+    match /ai_insights/{insightId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAnalyst() || isManager() || isAdmin();
+      allow delete: if isManager() || isAdmin();
+    }
+    
+    // Credit Analysis
+    match /credit_analysis/{analysisId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAnalyst() || isManager() || isAdmin();
+      allow delete: if isManager() || isAdmin();
+    }
+    
+    // ESG Analysis
+    match /esg_analysis/{analysisId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAnalyst() || isManager() || isAdmin();
+      allow delete: if isManager() || isAdmin();
+    }
+    
+    // Risk Scenarios
+    match /risk_scenarios/{scenarioId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Order Blotter
+    match /orders/{orderId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Data Ingestion Jobs
+    match /data_jobs/{jobId} {
+      allow read: if isManager() || isAdmin();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Audit Logs
+    match /audit_logs/{logId} {
+      allow read: if isCompliance() || isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Immutable logs
+    }
+    
+    // Compliance Rules
+    match /compliance_rules/{ruleId} {
+      allow read: if isCompliance() || isManager() || isAdmin();
+      allow create, update: if isCompliance() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Workflows
+    match /workflows/{workflowId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read, write: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated();
+    }
+    
+    // Watchlists
+    match /watchlists/{watchlistId} {
+      allow read, write: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated();
+    }
+    
+    // Fundraising Pipeline
+    match /fundraising/{pipelineId} {
+      allow read: if isManager() || isAdmin();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Performance Attribution
+    match /performance_attribution/{attributionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager() || isAdmin();
+      allow delete: if isAdmin();
     }
   }
 } 

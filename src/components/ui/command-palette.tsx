@@ -22,7 +22,14 @@ import {
   Settings,
   Activity,
   BarChart3,
-  Building2
+  Building2,
+  Brain,
+  CreditCard,
+  Leaf,
+  Gauge,
+  ArrowUpDown,
+  Database,
+  UserCheck
 } from "lucide-react"
 
 interface CommandPaletteProps {
@@ -34,17 +41,35 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChange }) =
   const navigate = useNavigate()
 
   const navigationItems = [
-    { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { title: "Portfolio", href: "/portfolio", icon: Wallet },
+    // Dashboard
+    { title: "Dashboard Overview", href: "/dashboard", icon: LayoutDashboard },
+    { title: "Trading Platforms", href: "/mt5", icon: Activity },
+    
+    // Front Office
+    { title: "Portfolio Management", href: "/portfolio", icon: Wallet },
+    { title: "Trading EMS", href: "/trading-ems", icon: ArrowUpDown },
+    { title: "Performance Attribution", href: "/performance-attribution", icon: TrendingUp },
+    { title: "AI Insights", href: "/ai-insights", icon: Brain },
+    { title: "Investor Portal", href: "/investor-portal", icon: Users },
     { title: "Trades", href: "/trades", icon: TrendingUp },
     { title: "Research", href: "/research", icon: Search },
     { title: "Market Screener", href: "/screener", icon: BarChart3 },
-    { title: "Accounts", href: "/mt5", icon: Activity },
-    { title: "Investors", href: "/investors", icon: Users },
-    { title: "Reports", href: "/reports", icon: FileText },
+    
+    // Middle Office
+    { title: "Credit Analysis", href: "/credit-analysis", icon: CreditCard },
+    { title: "Risk Management", href: "/risk-management", icon: Gauge },
+    { title: "ESG & Climate Risk", href: "/esg", icon: Leaf },
     { title: "Compliance", href: "/compliance", icon: Shield },
+    
+    // Back Office
+    { title: "Reports", href: "/reports", icon: FileText },
+    { title: "Data Ingestion", href: "/data-ingestion", icon: Database },
+    { title: "User Management", href: "/users", icon: UserCheck },
     { title: "Tasks", href: "/tasks", icon: Calendar },
     { title: "Settings", href: "/settings", icon: Settings },
+    
+    // External
+    { title: "Investors", href: "/investors", icon: Users },
   ]
 
   const handleSelect = (href: string) => {

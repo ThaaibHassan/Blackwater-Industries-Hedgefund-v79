@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Progress } from '@/components/ui/progress';
-import { User } from '@/types';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -17,13 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,41 +39,61 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AddUserDialog } from '@/components/admin/AddUserDialog';
-import { EditUserDialog } from '@/components/admin/EditUserDialog';
-import { 
-  MoreHorizontal, 
-  Users, 
-  UserPlus, 
-  UserCheck, 
-  UserX, 
-  Shield, 
-  Activity, 
-  Download, 
-  Search, 
-  Settings, 
-  Edit, 
-  Trash2, 
-  Key, 
-  Eye, 
-  RefreshCw,
-  TrendingUp,
-  TrendingDown,
-  AlertCircle,
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
+import { User, UserRole, Permission } from '@/types';
+import {
+  Users,
+  UserPlus,
+  UserCheck,
+  UserX,
+  Shield,
+  Activity,
+  Download,
+  Filter,
+  Search,
+  Eye,
+  Edit,
+  Trash2,
+  Lock,
+  Unlock,
+  Key,
+  AlertTriangle,
   CheckCircle,
   XCircle,
   Clock,
-  BarChart3,
-  FileText,
-  Bell,
+  Calendar,
   Mail,
   Phone,
   MapPin,
   Building2,
-  Settings as SettingsIcon,
-  Shield as ShieldIcon,
-  Activity as ActivityIcon,
-  FileText as FileTextIcon,
+  Settings,
+  RefreshCw,
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  TrendingDown,
+  AlertCircle,
+  Info,
+  Timer,
+  Route,
+  Gauge,
   User as UserIcon,
   LogOut,
   LogIn,
@@ -84,7 +101,8 @@ import {
   Smartphone,
   Globe,
   Database,
-  Bell as BellIcon,
+  FileText,
+  Bell,
   MessageSquare,
   Zap,
   Target,
@@ -95,33 +113,51 @@ import {
   CheckSquare,
   Square,
   AlertOctagon,
-  Info,
-  Timer,
-  Route,
-  Gauge,
-  TrendingUpIcon,
-  TrendingDownIcon,
-  Calendar,
+  Globe as GlobeIcon,
+  Settings as SettingsIcon,
+  Shield as ShieldIcon,
+  Activity as ActivityIcon,
+  FileText as FileTextIcon,
   Calendar as CalendarIcon
 } from 'lucide-react';
 
-const UsersPage: React.FC = () => {
+interface UserManagementDashboardProps {
+  onUserAdded?: () => void;
+  onUserUpdated?: () => void;
+  onUserDeleted?: () => void;
+}
+
+export const UserManagementDashboard: React.FC<UserManagementDashboardProps> = ({
+  onUserAdded,
+  onUserUpdated,
+  onUserDeleted
+}) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showBulkActions, setShowBulkActions] = useState(false);
-  const { getAllUsers, deleteUserByAdmin, updateUserByAdmin } = useAuth();
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [showEditUserDialog, setShowEditUserDialog] = useState(false);
+  const [showSecurityDialog, setShowSecurityDialog] = useState(false);
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
+  const [showSessionDialog, setShowSessionDialog] = useState(false);
+  const [showAuditDialog, setShowAuditDialog] = useState(false);
+
   const { toast } = useToast();
+  const { getAllUsers, deleteUserByAdmin, updateUserByAdmin, createUserByAdmin } = useAuth();
 
-  console.log('UsersPage users:', users, 'loading:', loading);
+  // Fetch users on component mount
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = async () => {
     setLoading(true);
     try {
       const usersList = await getAllUsers();
@@ -136,11 +172,7 @@ const UsersPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [getAllUsers, toast]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  };
 
   // Filter users based on selected criteria
   const filteredUsers = users.filter(user => {
@@ -194,39 +226,7 @@ const UsersPage: React.FC = () => {
     return <Key className="h-3 w-3" />;
   };
 
-  const handleEdit = (user: User) => {
-    setSelectedUser(user);
-    setIsEditDialogOpen(true);
-  };
-
-  const handleDelete = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    if (selectedUser) {
-      try {
-        await deleteUserByAdmin(selectedUser.uid);
-        fetchUsers(); // Refresh users list
-        toast({
-          title: "User Deleted",
-          description: "User has been deleted successfully.",
-        });
-      } catch (error) {
-        console.error("Failed to delete user", error);
-        toast({
-          title: "Error",
-          description: "Failed to delete user",
-          variant: "destructive",
-        });
-      } finally {
-        setIsDeleteDialogOpen(false);
-        setSelectedUser(null);
-      }
-    }
-  };
-
+  // User actions
   const handleActivateUser = async (userId: string) => {
     try {
       await updateUserByAdmin(userId, { isActive: true });
@@ -256,6 +256,26 @@ const UsersPage: React.FC = () => {
       toast({
         title: "Error",
         description: "Failed to deactivate user",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await deleteUserByAdmin(userId);
+      await fetchUsers();
+      setShowDeleteDialog(false);
+      setSelectedUser(null);
+      toast({
+        title: "User Deleted",
+        description: "User has been deleted successfully.",
+      });
+      onUserDeleted?.();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete user",
         variant: "destructive",
       });
     }
@@ -292,6 +312,37 @@ const UsersPage: React.FC = () => {
     });
   };
 
+  const handleBulkAction = async (action: 'activate' | 'deactivate' | 'delete') => {
+    try {
+      for (const userId of selectedUsers) {
+        switch (action) {
+          case 'activate':
+            await updateUserByAdmin(userId, { isActive: true });
+            break;
+          case 'deactivate':
+            await updateUserByAdmin(userId, { isActive: false });
+            break;
+          case 'delete':
+            await deleteUserByAdmin(userId);
+            break;
+        }
+      }
+      await fetchUsers();
+      setSelectedUsers([]);
+      setShowBulkActions(false);
+      toast({
+        title: "Bulk Action Completed",
+        description: `Successfully ${action}ed ${selectedUsers.length} users.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to ${action} users`,
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleUserSelection = (userId: string, selected: boolean) => {
     if (selected) {
       setSelectedUsers(prev => [...prev, userId]);
@@ -309,13 +360,13 @@ const UsersPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header Section */}
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">User Management</h2>
+          <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
           <p className="text-muted-foreground">
-            Manage all users in the system with comprehensive controls
+            Comprehensive user administration and security management
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -323,7 +374,10 @@ const UsersPage: React.FC = () => {
             <Download className="mr-2 h-4 w-4" />
             Export Report
           </Button>
-          <AddUserDialog onUserAdded={fetchUsers} />
+          <Button onClick={() => setShowAddUserDialog(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add User
+          </Button>
         </div>
       </div>
 
@@ -379,7 +433,7 @@ const UsersPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Filters */}
+      {/* Filters and Bulk Actions */}
       <Card>
         <CardHeader>
           <CardTitle>User Filters</CardTitle>
@@ -434,6 +488,7 @@ const UsersPage: React.FC = () => {
                 <Button 
                   size="sm" 
                   variant="outline"
+                  onClick={() => setShowBulkActions(!showBulkActions)}
                   disabled={selectedUsers.length === 0}
                 >
                   <Settings className="mr-1 h-3 w-3" />
@@ -449,6 +504,40 @@ const UsersPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Bulk Actions Menu */}
+          {showBulkActions && selectedUsers.length > 0 && (
+            <div className="mt-4 p-4 bg-muted rounded-lg">
+              <div className="flex items-center space-x-4">
+                <span className="text-sm font-medium">
+                  {selectedUsers.length} users selected
+                </span>
+                <Button 
+                  size="sm" 
+                  onClick={() => handleBulkAction('activate')}
+                >
+                  <UserCheck className="mr-1 h-3 w-3" />
+                  Activate
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => handleBulkAction('deactivate')}
+                >
+                  <UserX className="mr-1 h-3 w-3" />
+                  Deactivate
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="destructive"
+                  onClick={() => handleBulkAction('delete')}
+                >
+                  <Trash2 className="mr-1 h-3 w-3" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -536,12 +625,22 @@ const UsersPage: React.FC = () => {
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
+                            <Settings className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleEdit(user)}>
+                          <DropdownMenuItem onClick={() => {
+                            setSelectedUser(user);
+                            setShowUserDetails(true);
+                          }}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => {
+                            setSelectedUser(user);
+                            setShowEditUserDialog(true);
+                          }}>
                             <Edit className="mr-2 h-4 w-4" />
                             Edit User
                           </DropdownMenuItem>
@@ -563,7 +662,10 @@ const UsersPage: React.FC = () => {
                           )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
-                            onClick={() => handleDelete(user)}
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setShowDeleteDialog(true);
+                            }}
                             className="text-red-600"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
@@ -630,7 +732,7 @@ const UsersPage: React.FC = () => {
       </Card>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -641,24 +743,236 @@ const UsersPage: React.FC = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
+            <AlertDialogAction onClick={() => selectedUser && handleDeleteUser(selectedUser.uid)}>
               Delete User
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Add User Dialog */}
+      <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New User</DialogTitle>
+            <DialogDescription>
+              Create a new user and assign them a role. They will be sent an email to set up their account.
+            </DialogDescription>
+          </DialogHeader>
+          <AddUserForm 
+            onUserAdded={() => {
+              setShowAddUserDialog(false);
+              fetchUsers();
+              onUserAdded?.();
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
       {/* Edit User Dialog */}
-      {selectedUser && (
-        <EditUserDialog
-          user={selectedUser}
-          isOpen={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          onUserUpdated={fetchUsers}
-        />
-      )}
+      <Dialog open={showEditUserDialog} onOpenChange={setShowEditUserDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit User: {selectedUser?.displayName}</DialogTitle>
+            <DialogDescription>
+              Update the user's details. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <EditUserForm 
+              user={selectedUser}
+              onUserUpdated={() => {
+                setShowEditUserDialog(false);
+                fetchUsers();
+                onUserUpdated?.();
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
-export default UsersPage; 
+// Add User Form Component
+const AddUserForm: React.FC<{ onUserAdded: () => void }> = ({ onUserAdded }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [role, setRole] = useState<UserRole>('analyst');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { createUserByAdmin } = useAuth();
+
+  const handleSubmit = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await createUserByAdmin({ 
+        email, 
+        password, 
+        displayName, 
+        role,
+        permissions: [],
+        isActive: true,
+        twoFactorEnabled: false
+      });
+      onUserAdded();
+      // Reset form
+      setEmail('');
+      setPassword('');
+      setDisplayName('');
+      setRole('analyst');
+    } catch (err: any) {
+      setError(err.message || 'Failed to create user.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const userRoles: UserRole[] = ['admin', 'manager', 'analyst', 'investor', 'compliance'];
+
+  return (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="displayName" className="text-right">
+          Name
+        </Label>
+        <Input
+          id="displayName"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="email" className="text-right">
+          Email
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="password" className="text-right">
+          Password
+        </Label>
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="role" className="text-right">
+          Role
+        </Label>
+        <Select onValueChange={(value) => setRole(value as UserRole)} defaultValue={role}>
+          <SelectTrigger className="col-span-3">
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            {userRoles.map((r) => (
+              <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      {error && <p className="text-sm text-red-500 text-center col-span-4">{error}</p>}
+      <DialogFooter>
+        <Button type="submit" onClick={handleSubmit} disabled={loading}>
+          {loading ? 'Creating...' : 'Create User'}
+        </Button>
+      </DialogFooter>
+    </div>
+  );
+};
+
+// Edit User Form Component
+const EditUserForm: React.FC<{ user: User; onUserUpdated: () => void }> = ({ user, onUserUpdated }) => {
+  const [role, setRole] = useState<UserRole>(user.role);
+  const [isActive, setIsActive] = useState(user.isActive);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(user.twoFactorEnabled);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { updateUserByAdmin } = useAuth();
+
+  const handleSubmit = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await updateUserByAdmin(user.uid, { 
+        role, 
+        isActive, 
+        twoFactorEnabled 
+      });
+      onUserUpdated();
+    } catch (err: any) {
+      setError(err.message || 'Failed to update user.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const userRoles: UserRole[] = ['admin', 'manager', 'analyst', 'investor', 'compliance'];
+
+  return (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="email" className="text-right">
+          Email
+        </Label>
+        <p className="col-span-3">{user.email}</p>
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="role" className="text-right">
+          Role
+        </Label>
+        <Select onValueChange={(value) => setRole(value as UserRole)} defaultValue={role}>
+          <SelectTrigger className="col-span-3">
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            {userRoles.map((r) => (
+              <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="active" className="text-right">
+          Active
+        </Label>
+        <Switch
+          id="active"
+          checked={isActive}
+          onCheckedChange={setIsActive}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="2fa" className="text-right">
+          2FA Enabled
+        </Label>
+        <Switch
+          id="2fa"
+          checked={twoFactorEnabled}
+          onCheckedChange={setTwoFactorEnabled}
+          className="col-span-3"
+        />
+      </div>
+      {error && <p className="text-sm text-red-500 text-center col-span-4">{error}</p>}
+      <DialogFooter>
+        <Button type="submit" onClick={handleSubmit} disabled={loading}>
+          {loading ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </DialogFooter>
+    </div>
+  );
+}; 

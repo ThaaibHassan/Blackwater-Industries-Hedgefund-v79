@@ -190,19 +190,39 @@ const TradesPage = () => {
 
   const handleSaveTrade = () => {
     if (newTrade.symbol && newTrade.quantity > 0 && newTrade.price > 0) {
-      const trade = {
-        id: Date.now(),
-        ...newTrade,
-        totalValue: newTrade.quantity * newTrade.price,
-        pnl: 0,
-        status: 'pending',
+      const tradeData = {
+        portfolioId: 'default-portfolio',
+        symbol: newTrade.symbol,
+        assetClass: 'equity' as const,
+        side: newTrade.side,
+        quantity: newTrade.quantity,
+        price: newTrade.price,
+        commission: 0,
+        timestamp: new Date(),
+        status: 'pending' as const,
+        tags: [],
+        riskMetrics: {
+          positionSize: 0,
+          maxRisk: 0
+        },
+        strategy: newTrade.strategy,
         analyst: 'Current User',
-        timestamp: new Date().toISOString()
+        type: newTrade.type
       };
-      // Implement add logic
+      
+      addTrade(tradeData);
       toast({
         title: "Trade Added",
         description: `${newTrade.side.toUpperCase()} ${newTrade.quantity} shares of ${newTrade.symbol} at $${newTrade.price}`,
+      });
+      setIsAddingTrade(false);
+      setNewTrade({
+        symbol: '',
+        side: 'buy',
+        quantity: 0,
+        price: 0,
+        type: 'market',
+        strategy: 'momentum'
       });
     } else {
       toast({
@@ -215,10 +235,29 @@ const TradesPage = () => {
 
   const handleUpdateTrade = () => {
     if (editingTradeId && newTrade.symbol && newTrade.quantity > 0 && newTrade.price > 0) {
-      // Implement update logic
+      const updates = {
+        symbol: newTrade.symbol,
+        side: newTrade.side,
+        quantity: newTrade.quantity,
+        price: newTrade.price,
+        strategy: newTrade.strategy,
+        type: newTrade.type
+      };
+      
+      updateTrade(editingTradeId.toString(), updates);
       toast({
         title: "Trade Updated",
         description: `${newTrade.symbol} trade has been updated.`,
+      });
+      setIsAddingTrade(false);
+      setEditingTradeId(null);
+      setNewTrade({
+        symbol: '',
+        side: 'buy',
+        quantity: 0,
+        price: 0,
+        type: 'market',
+        strategy: 'momentum'
       });
     } else {
       toast({

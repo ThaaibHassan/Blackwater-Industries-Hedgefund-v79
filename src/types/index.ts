@@ -21,7 +21,8 @@ export type Permission =
   | 'investors:view' | 'investors:edit' | 'investors:delete'
   | 'reports:view' | 'reports:generate' | 'reports:export'
   | 'users:view' | 'users:edit' | 'users:delete'
-  | 'settings:view' | 'settings:edit';
+  | 'settings:view' | 'settings:edit'
+  | 'compliance:view' | 'compliance:edit';
 
 // Portfolio Types
 export interface Portfolio {
@@ -98,6 +99,319 @@ export interface PerformanceMetrics {
   sortinoRatio: number;
   treynorRatio: number;
   trackingError: number;
+}
+
+// Performance Attribution Types
+export interface PerformanceAttribution {
+  id: string;
+  portfolioId: string;
+  period: {
+    start: Date;
+    end: Date;
+  };
+  totalReturn: number;
+  benchmarkReturn: number;
+  excessReturn: number;
+  attribution: {
+    assetAllocation: number;
+    stockSelection: number;
+    interaction: number;
+    currency: number;
+    other: number;
+  };
+  sectorAttribution: SectorAttribution[];
+  factorAttribution: FactorAttribution[];
+  createdAt: Date;
+}
+
+export interface SectorAttribution {
+  sector: string;
+  weight: number;
+  return: number;
+  contribution: number;
+  benchmarkWeight: number;
+  benchmarkReturn: number;
+  excessReturn: number;
+}
+
+export interface FactorAttribution {
+  factor: string;
+  exposure: number;
+  factorReturn: number;
+  contribution: number;
+  benchmarkExposure: number;
+  benchmarkFactorReturn: number;
+  excessContribution: number;
+}
+
+// AI Insights and Quant Research Types
+export interface AIInsight {
+  id: string;
+  type: 'market_signal' | 'risk_alert' | 'opportunity' | 'anomaly';
+  title: string;
+  description: string;
+  confidence: number; // 0-100
+  impact: 'high' | 'medium' | 'low';
+  assetClass: AssetClass;
+  symbols: string[];
+  data: {
+    technicalIndicators: TechnicalIndicator[];
+    sentimentScore: number;
+    alternativeData: AlternativeDataPoint[];
+    modelPredictions: ModelPrediction[];
+  };
+  createdAt: Date;
+  expiresAt?: Date;
+  status: 'active' | 'expired' | 'validated' | 'rejected';
+}
+
+export interface TechnicalIndicator {
+  name: string;
+  value: number;
+  signal: 'buy' | 'sell' | 'neutral';
+  strength: number; // 0-100
+}
+
+export interface AlternativeDataPoint {
+  source: string;
+  metric: string;
+  value: number;
+  change: number;
+  timestamp: Date;
+}
+
+export interface ModelPrediction {
+  modelName: string;
+  prediction: number;
+  confidence: number;
+  timeframe: string;
+}
+
+// Credit Analysis Types
+export interface CreditAnalysis {
+  id: string;
+  issuerId: string;
+  issuerName: string;
+  creditRating: {
+    internal: string;
+    external: string;
+    outlook: 'positive' | 'stable' | 'negative';
+  };
+  creditScore: {
+    altmanZScore: number;
+    mlScore: number;
+    compositeScore: number;
+  };
+  riskMetrics: {
+    defaultProbability: number;
+    creditSpread: number;
+    duration: number;
+    convexity: number;
+    recoveryRate: number;
+  };
+  financialMetrics: {
+    debtToEquity: number;
+    interestCoverage: number;
+    cashFlowCoverage: number;
+    leverageRatio: number;
+  };
+  sectorAnalysis: {
+    sector: string;
+    peerComparison: number;
+    industryRisk: 'low' | 'medium' | 'high';
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreditCurve {
+  id: string;
+  issuerId: string;
+  maturity: number; // in years
+  yield: number;
+  spread: number;
+  duration: number;
+  convexity: number;
+  timestamp: Date;
+}
+
+// ESG and Climate Risk Types
+export interface ESGAnalysis {
+  id: string;
+  issuerId: string;
+  issuerName: string;
+  esgScore: {
+    environmental: number;
+    social: number;
+    governance: number;
+    overall: number;
+  };
+  climateRisk: {
+    carbonFootprint: number;
+    carbonIntensity: number;
+    climateScenarioAnalysis: ClimateScenario[];
+    transitionRisk: number;
+    physicalRisk: number;
+  };
+  sdgAlignment: SDGAlignment[];
+  exclusionFilters: string[];
+  inclusionFilters: string[];
+  dataSource: 'msci' | 'sustainalytics' | 'refinitiv' | 'internal';
+  lastUpdated: Date;
+}
+
+export interface ClimateScenario {
+  scenario: 'baseline' | '2c' | '4c';
+  impact: number;
+  probability: number;
+  timeframe: number;
+}
+
+export interface SDGAlignment {
+  goal: string;
+  alignment: number; // 0-100
+  contribution: number;
+  description: string;
+}
+
+// Advanced Risk Management Types
+export interface RiskScenario {
+  id: string;
+  name: string;
+  type: 'historical' | 'parametric' | 'monte_carlo' | 'custom';
+  description: string;
+  parameters: {
+    confidenceLevel: number;
+    timeHorizon: number;
+    scenarios: number;
+  };
+  results: {
+    var: number;
+    cvar: number;
+    expectedShortfall: number;
+    maxDrawdown: number;
+    stressTestResults: StressTestResult[];
+  };
+  createdAt: Date;
+}
+
+export interface StressTestResult {
+  scenario: string;
+  portfolioImpact: number;
+  factorImpacts: FactorImpact[];
+  recommendations: string[];
+}
+
+export interface FactorImpact {
+  factor: string;
+  shock: number;
+  impact: number;
+  contribution: number;
+}
+
+// Advanced Trading EMS Types
+export interface OrderBlotter {
+  id: string;
+  symbol: string;
+  side: 'buy' | 'sell' | 'short' | 'cover';
+  quantity: number;
+  price: number;
+  orderType: 'market' | 'limit' | 'stop' | 'stop_limit';
+  status: 'pending' | 'approved' | 'rejected' | 'executed' | 'cancelled';
+  approvalLevel: number;
+  approvals: OrderApproval[];
+  complianceChecks: ComplianceCheck[];
+  executionDetails?: ExecutionDetail;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface OrderApproval {
+  level: number;
+  approver: string;
+  status: 'pending' | 'approved' | 'rejected';
+  comments?: string;
+  timestamp: Date;
+}
+
+export interface ComplianceCheck {
+  rule: string;
+  status: 'pass' | 'fail' | 'warning';
+  details: string;
+  override?: {
+    approver: string;
+    reason: string;
+    timestamp: Date;
+  };
+}
+
+export interface ExecutionDetail {
+  broker: string;
+  venue: string;
+  executionPrice: number;
+  executionTime: Date;
+  slippage: number;
+  commission: number;
+  fees: number;
+}
+
+// Data Ingestion Types
+export interface DataIngestionJob {
+  id: string;
+  name: string;
+  type: 'price_feed' | 'index_data' | 'alternative_data' | 'csv_import' | 'api_sync';
+  status: 'running' | 'completed' | 'failed' | 'scheduled';
+  schedule?: string; // cron expression
+  source: {
+    type: string;
+    url?: string;
+    credentials?: Record<string, string>;
+  };
+  destination: {
+    collection: string;
+    format: string;
+  };
+  lastRun?: Date;
+  nextRun?: Date;
+  errorCount: number;
+  successCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface DataQualityCheck {
+  id: string;
+  jobId: string;
+  checkType: 'completeness' | 'accuracy' | 'consistency' | 'timeliness';
+  status: 'pass' | 'fail' | 'warning';
+  details: string;
+  timestamp: Date;
+}
+
+// Advanced User Management Types
+export interface UserPermission {
+  id: string;
+  userId: string;
+  resource: string;
+  action: string;
+  conditions?: Record<string, any>;
+  scope?: {
+    portfolios?: string[];
+    assetClasses?: AssetClass[];
+    regions?: string[];
+  };
+  expiresAt?: Date;
+  createdAt: Date;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  isSystem: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Trade Types

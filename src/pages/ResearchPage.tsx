@@ -50,7 +50,7 @@ const categories = [
 ];
 
 const ResearchPage = () => {
-  const { researchNotes } = useData();
+  const { researchNotes, addResearchNote, updateResearchNote, deleteResearchNote, rateResearchNote } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -160,7 +160,7 @@ const ResearchPage = () => {
   };
 
   const handleRateNote = (note: ResearchNote, rating: number) => {
-    // In a real app, this would call an API
+    rateResearchNote(note.id, rating);
     toast({
       title: "Rating Submitted",
       description: `You rated "${note.title}" ${rating} stars.`,
@@ -223,28 +223,26 @@ const ResearchPage = () => {
 
   const handleSaveNote = () => {
     if (newNote.title && newNote.symbols.length > 0 && newNote.content) {
-      const now = new Date();
-      const createdNote: ResearchNote = {
-        id: Date.now().toString(),
+      const noteData = {
         title: newNote.title,
         content: newNote.content,
         analystId: 'current-user',
         analystName: 'Current User',
-        assetClass: 'equity',
+        assetClass: 'equity' as const,
         symbol: newNote.symbols[0] || 'N/A',
         symbols: newNote.symbols,
         tags: [],
-        status: 'draft',
+        status: 'draft' as const,
         priority: newNote.priority,
-        recommendation: 'hold',
+        recommendation: 'hold' as const,
         dueDate: newNote.dueDate,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         attachments: [],
         version: 1,
-        isPublic: false
+        isPublic: false,
+        updatedAt: new Date()
       };
-      // researchNotes.push(createdNote);
+      
+      addResearchNote(noteData);
       toast({
         title: "Research Note Added",
         description: `New research note "${newNote.title}" has been created.`,
@@ -272,8 +270,16 @@ const ResearchPage = () => {
   };
 
   const handleUpdateNote = () => {
-    if (newNote.title && newNote.symbols.length > 0 && newNote.content) {
-      // researchNotes.push(newNote);
+    if (editingNoteId && newNote.title && newNote.symbols.length > 0 && newNote.content) {
+      const updates = {
+        title: newNote.title,
+        content: newNote.content,
+        symbols: newNote.symbols,
+        priority: newNote.priority,
+        dueDate: newNote.dueDate,
+      };
+      
+      updateResearchNote(editingNoteId, updates);
       toast({
         title: "Research Note Updated",
         description: `Research note "${newNote.title}" has been updated.`,

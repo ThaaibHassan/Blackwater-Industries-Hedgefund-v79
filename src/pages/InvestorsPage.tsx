@@ -156,7 +156,26 @@ const InvestorsPage = () => {
 
   const handleSaveInvestor = () => {
     if (newInvestor.name && newInvestor.email && newInvestor.phone) {
-      // In a real app, this would call an API
+      const investorData = {
+        name: newInvestor.name,
+        email: newInvestor.email,
+        phone: newInvestor.phone,
+        type: newInvestor.type as 'individual' | 'institutional' | 'family_office' | 'fund_of_funds',
+        status: 'prospect' as const,
+        totalCommitment: newInvestor.totalCommitment,
+        totalInvestment: 0,
+        currentValue: 0,
+        totalReturn: 0,
+        riskProfile: 'moderate' as const,
+        joinDate: new Date(),
+        inceptionDate: new Date(),
+        kycStatus: 'pending' as const,
+        documents: [],
+        assignedManager: newInvestor.assignedManager,
+        updatedAt: new Date()
+      };
+      
+      addInvestor(investorData);
       toast({
         title: "Investor Added",
         description: `${newInvestor.name} has been added to the system.`,
